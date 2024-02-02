@@ -1,0 +1,21 @@
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  username: abhishek
+  password: password
+  host: localhost
+
+development:
+  <<: *default
+  database: grind_and_pound_development
+
+test:
+  <<: *default
+  database: grind_and_pound_test
+
+production:
+  <<: *default
+  database: grind_and_pound_production
+  username: grind_and_pound
+  password: <%= ENV['GRIND_AND_POUND_DATABASE_PASSWORD'] %>
