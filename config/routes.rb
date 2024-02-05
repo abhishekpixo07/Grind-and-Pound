@@ -13,7 +13,14 @@ Rails.application.routes.draw do
       end
 
       resources :products, only: [:index, :show]
-      
+      resources :shipping_addresses
+      resources :carts
+      resources :coupons, only: [:index, :show] do
+        member do
+          post 'apply'
+          delete 'remove'
+        end
+      end
       # Other API routes...
     end
   end
