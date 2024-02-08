@@ -13,7 +13,7 @@ Rails.application.routes.draw do
   root to: "admin/dashboard#index"
   namespace :api do
     namespace :v1 do
-      get 'home', to: 'homes#home'
+      post 'home', to: 'homes#home'
       resources :users, only: [:create,:update] do
         collection do
           post :confirm_otp
