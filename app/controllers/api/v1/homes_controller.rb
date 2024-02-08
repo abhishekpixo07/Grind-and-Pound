@@ -1,6 +1,7 @@
 module Api
     module V1    
         class HomesController < ApplicationController
+            skip_before_action :authenticate_user_from_token!
             def home
                 if params[:keyword].present?
                     @products = Product.where('name ILIKE ?', "%#{params[:keyword]}%")
