@@ -1,4 +1,3 @@
-# app/controllers/api/v1/coupons_controller.rb
 module Api
   module V1 
     class Api::V1::CouponsController < ApplicationController

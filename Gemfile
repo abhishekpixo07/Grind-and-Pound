@@ -48,6 +48,8 @@ gem 'twilio-ruby'
 gem 'active_model_serializers', '~> 0.10.0'
 gem 'activeadmin', '~> 3.2.0'
 gem 'sassc-rails'
+gem 'devise'
+
 
 
 
