@@ -1,10 +1,19 @@
 # config/routes.rb
 
 Rails.application.routes.draw do
+  
+  devise_for :admin_users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)
+
+  authenticate :admin_user do
+    delete 'admin/logout', to: 'admin/admin_users#custom_logout', as: 'admin_logout'
+  end
+
+
   root to: "admin/dashboard#index"
   namespace :api do
     namespace :v1 do
+      get 'home', to: 'homes#home'
       resources :users, only: [:create,:update] do
         collection do
           post :confirm_otp
@@ -13,9 +22,15 @@ Rails.application.routes.draw do
         end
       end
 
+      resources :users do
+        resources :orders, only: [:index]
+      end
+      resources :orders
+
       resources :products, only: [:index, :show]
       resources :shipping_addresses
       resources :carts
+      resources :reviews, only: [:index, :show, :create, :update, :destroy]
       resources :coupons, only: [:index, :show] do
         member do
           post 'apply'
