@@ -26,7 +26,7 @@ Rails.application.routes.draw do
         resources :orders, only: [:index]
       end
       resources :orders
-
+      resources :banners, only: [:index]
       resources :products, only: [:index, :show]
       resources :shipping_addresses
       resources :carts
