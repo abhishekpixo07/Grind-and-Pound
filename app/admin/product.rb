@@ -1,19 +1,31 @@
 # app/admin/product.rb
 
 ActiveAdmin.register Product do
-    permit_params :name, :description, :available_on, :discontinue_on,
-                  :master_price, :cost_price, :subcategory_id
-  
+  permit_params :name, :description, :available_on, :net_wt, :discontinue_on, :master_price, :cost_price, :subcategory_id, :attachment
+    
+    filter :name
+    filter :description
+    filter :available_on
+    filter :discontinue_on
+    filter :master_price
+    filter :cost_price
+    filter :subcategory
+    filter :attachment, as: :file
+
     index do
       selectable_column
       id_column
       column :name
       column :description
       column :available_on
+      column :net_wt
       column :discontinue_on
       column :master_price
       column :cost_price
       column :subcategory
+      column :attachment do |pro|
+        image_tag url_for(pro.attachment.present? ? pro.attachment : ''), width:100, height:80, skip_pipeline: true
+      end
       actions
     end
   
@@ -21,11 +33,13 @@ ActiveAdmin.register Product do
       f.inputs 'Product Details' do
         f.input :name
         f.input :description
+        f.input :net_wt
         f.input :available_on
         f.input :discontinue_on
         f.input :master_price
         f.input :cost_price
         f.input :subcategory
+        f.input :attachment, as: :file
       end
       f.actions
     end
@@ -35,12 +49,16 @@ ActiveAdmin.register Product do
         row :name
         row :description
         row :available_on
+        row :net_wt
         row :discontinue_on
         row :master_price
         row :cost_price
         row :subcategory
         row :created_at
         row :updated_at
+        row :attachment do |pro|
+          image_tag url_for(pro.attachment.present? ? pro.attachment : ''), width:100, height:80, skip_pipeline: true
+        end
       end
     end
   end
