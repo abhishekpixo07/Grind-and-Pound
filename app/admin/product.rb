@@ -1,14 +1,12 @@
 # app/admin/product.rb
 
 ActiveAdmin.register Product do
-  permit_params :name, :description, :available_on, :net_wt, :discontinue_on, :master_price, :cost_price, :subcategory_id, :attachment
+  permit_params :name, :description, :available_on, :net_wt, :unit, :discontinue_on, :master_price, :cost_price, :subcategory_id, :attachment
     
     filter :name
-    filter :description
     filter :available_on
     filter :discontinue_on
     filter :master_price
-    filter :cost_price
     filter :subcategory
     filter :attachment, as: :file
 
@@ -16,9 +14,14 @@ ActiveAdmin.register Product do
       selectable_column
       id_column
       column :name
-      column :description
+      column :description do |product|
+        truncate(product.description, length: 50, separator: ' ')
+      end
       column :available_on
       column :net_wt
+      column 'Unit' do |pro|
+        pro.unit.present? ? pro.unit.titleize : ""
+      end
       column :discontinue_on
       column :master_price
       column :cost_price
@@ -34,8 +37,9 @@ ActiveAdmin.register Product do
         f.input :name
         f.input :description
         f.input :net_wt
-        f.input :available_on
-        f.input :discontinue_on
+        f.input :unit, :as => :select, :collection => ["grams","kilograms","ounces","pounds"]
+        f.input :available_on, as: :string, input_html: { class: 'datepicker' }
+        f.input :discontinue_on, as: :string, input_html: { class: 'datepicker' }
         f.input :master_price
         f.input :cost_price
         f.input :subcategory
@@ -50,6 +54,9 @@ ActiveAdmin.register Product do
         row :description
         row :available_on
         row :net_wt
+        row 'Unit' do |product|
+          product.unit.titleize
+        end
         row :discontinue_on
         row :master_price
         row :cost_price
