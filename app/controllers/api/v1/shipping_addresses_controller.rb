@@ -35,13 +35,14 @@ module Api
       
         def destroy
           @shipping_address.destroy
-          head :no_content
+          render json: { error: 'shipping address Deleted.' }, status: :ok
         end
       
         private
       
         def set_shipping_address
-          @shipping_address = ShippingAddress.find(params[:id])
+          @shipping_address = ShippingAddress.find_by_id(params[:id])
+          render json: { error: 'shipping address not found.' }, status: :unprocessable_entity if !@shipping_address.present?
         end
       
         def shipping_address_params

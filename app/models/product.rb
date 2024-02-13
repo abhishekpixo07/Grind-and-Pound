@@ -8,6 +8,19 @@ class Product < ApplicationRecord
 
   has_many :variants
 
+  scope :filter_by_price_range, ->(min_price, max_price) do
+    where(master_price: min_price..max_price)
+  end
+
+  scope :filter_by_subcategory, ->(subcategory_id) do
+    where(subcategory_id: subcategory_id)
+  end
+
+  scope :filter_by_net_wt_and_unit, ->(net_wt_unit) do
+    net_wt, unit = net_wt_unit.match(/(\d+)([a-zA-Z]+)/).captures
+    where(net_wt: net_wt, unit: unit)
+  end
+
   def self.ransackable_associations(auth_object = nil)
     ["images", "subcategory", "variants"]
   end

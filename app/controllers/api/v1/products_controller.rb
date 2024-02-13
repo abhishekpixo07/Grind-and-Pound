@@ -7,13 +7,9 @@ module Api
             before_action :set_product, only: [:show]
 
             def index
-                if params[:keyword].present?
-                    @products = Product.where('name ILIKE ?', "%#{params[:keyword]}%")
-                else
-                    @products = Product.all
-                end 
+                @products = filter_products
                 render json: { data: 'products list.', products: @products }, status: :ok
-            end
+            end  
         
             def show
                 render json: { data: 'product details.', product: @product }, status: :ok
@@ -24,6 +20,26 @@ module Api
             def set_product
             @product = Product.find_by_id(params[:id]) if params[:id].present?
             render json: { error: 'product not found.' }, status: :unprocessable_entity if !@product.present?
+            end
+
+            def filter_products
+                return Product.all unless filter_criteria_present?
+                products = Product.all
+                products = products.where('name ILIKE ?', "%#{params[:keyword]}%") if params[:keyword].present?
+                if params[:subcategory_id].present?
+                  subcategory = Subcategory.find_by(id: params[:subcategory_id])
+                  products = subcategory ? products.filter_by_subcategory(subcategory.id) : Product.none
+                end
+                if params[:min_price].present? && params[:max_price].present?
+                  products = products.filter_by_price_range(params[:min_price].to_f, params[:max_price].to_f)
+                end
+                products = products.filter_by_net_wt_and_unit(params[:net_wt_unit]) if params[:net_wt_unit].present?
+                products
+              end
+              
+              
+            def filter_criteria_present?
+                params[:keyword].present? || params[:subcategory_id].present? || (params[:min_price].present? && params[:max_price].present?) || params[:net_wt_unit].present?
             end
 
         end
