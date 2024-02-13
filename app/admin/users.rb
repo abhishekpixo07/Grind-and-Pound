@@ -15,7 +15,15 @@ ActiveAdmin.register User do
     column :email
     column :phone_number
     column :country_code
+    column :dob
+    column :address
+    column :state
+    column :country
+    column :gender
     column :active
+    column :attachment do |user|
+      image_tag url_for(user.attachment.present? ? user.attachment : ''), width:100, height:80, skip_pipeline: true
+    end
     actions
   end
 
@@ -26,7 +34,14 @@ ActiveAdmin.register User do
       row :email
       row :phone_number
       row :country_code
-      row :profile_pic
+      row :dob
+      row :address
+      row :state
+      row :country
+      row :gender
+      row :attachment do |user|
+        image_tag url_for(user.attachment.present? ? user.attachment : ''), width:100, height:80, skip_pipeline: true
+      end
       row :otp
       row :active
       row :created_at

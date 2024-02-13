@@ -5,6 +5,8 @@ module Api
       before_action :authenticate_user_with_otp, only: [:create]
       before_action :authenticate_user_from_token!, only: [:confirm_otp, :logout, :profile, :update]
       before_action :current_user, only: [:profile, :update]
+      before_action :set_active_storage_url_options
+
       def create
         # The logic is now handled in the OtpAuthenticable concern
       end
@@ -38,6 +40,10 @@ module Api
       end
  
       def update
+        if params[:user][:attachment].present?
+          @current_user.attachment.purge # Remove the existing attachment if needed
+          @current_user.attachment.attach(params[:user][:attachment])
+        end
         if @current_user.update(user_params)
           render json: @current_user, serializer: Api::V1::UserSerializer, status: :ok
         else
@@ -49,8 +55,9 @@ module Api
       private
 
       def user_params
-        params.require(:user).permit(:country_code, :phone_number, :name, :email)
+        params.require(:user).permit(:country_code, :phone_number, :name, :email, :otp, :active, :dob, :address, :state, :country, :gender, :attachment )
       end
+
     end
   end
 end
