@@ -10,7 +10,7 @@ module Api
                         Product.where('name ILIKE ?', "%#{params[:keyword]}%")
                       elsif params[:subcategory_id].present?
                         subcategory = Subcategory.find_by(id: params[:subcategory_id])
-                        subcategory ? Product.where(subcategory: subcategory) : Product.none
+                        subcategory ? Product.filter_by_subcategory(subcategory.id) : Product.none
                       else
                         Product.all
                       end 

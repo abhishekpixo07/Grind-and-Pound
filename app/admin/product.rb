@@ -18,9 +18,8 @@ ActiveAdmin.register Product do
         truncate(product.description, length: 50, separator: ' ')
       end
       column :available_on
-      column :net_wt
-      column 'Unit' do |pro|
-        pro.unit.present? ? pro.unit.titleize : ""
+      column 'net_wt' do |pro|
+        pro.unit.present? ? pro.net_wt + pro.unit : ""
       end
       column :discontinue_on
       column :master_price
@@ -37,7 +36,7 @@ ActiveAdmin.register Product do
         f.input :name
         f.input :description
         f.input :net_wt
-        f.input :unit, :as => :select, :collection => ["grams","kilograms","ounces","pounds"]
+        f.input :unit, :as => :select, :collection => ["g","kg"]
         f.input :available_on, as: :string, input_html: { class: 'datepicker' }
         f.input :discontinue_on, as: :string, input_html: { class: 'datepicker' }
         f.input :master_price
@@ -53,9 +52,8 @@ ActiveAdmin.register Product do
         row :name
         row :description
         row :available_on
-        row :net_wt
-        row 'Unit' do |product|
-          product.unit.titleize
+        row 'Net wt' do |pro|
+          pro.unit.present? ? pro.net_wt + pro.unit : ""
         end
         row :discontinue_on
         row :master_price
