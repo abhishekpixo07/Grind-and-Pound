@@ -16,12 +16,12 @@ module Api
                       end 
       
           @subcategories = Subcategory.all
-      
+          @categories = Category.all
           render json: {
             message: 'Products list.',
             data: {
               products: ActiveModelSerializers::SerializableResource.new(@products, each_serializer: ProductSerializer),
-              subcategories: @subcategories.as_json(except: [:created_at, :updated_at])
+              subcategories: @subcategories.as_json(only: [:id, :name]), categories: @categories.as_json(only: [:id, :name])
             }
           }, status: :ok
         end

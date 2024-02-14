@@ -27,7 +27,12 @@ Rails.application.routes.draw do
       end
       resources :orders
       resources :banners, only: [:index]
-      resources :products, only: [:index, :show]
+      resources :user_subscriptions
+      resources :products, only: [:show] do
+        collection do
+          post 'index', to: 'products#index'
+        end
+      end
       resources :shipping_addresses
       resources :carts
       resources :reviews, only: [:index, :show, :create, :update, :destroy]

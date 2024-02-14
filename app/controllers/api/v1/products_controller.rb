@@ -9,7 +9,8 @@ module Api
             def index
                 @products = filter_products
                 @subcategories = Subcategory.all
-                render json: { data: 'products list.', products: @products, subcategories: @subcategories.as_json(only: [:id, :name]) }, status: :ok
+                @categories = Category.all
+                render json: { data: 'products list.', products: @products, subcategories: @subcategories.as_json(only: [:id, :name]), categories: @categories.as_json(only: [:id, :name]) }, status: :ok
             end  
         
             def show
