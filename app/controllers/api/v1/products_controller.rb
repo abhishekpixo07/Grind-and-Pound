@@ -15,8 +15,15 @@ module Api
             end  
         
             def show
-            render json: { data: 'product details.', product: ActiveModelSerializers::SerializableResource.new(@product, each_serializer: ProductSerializer) }, status: :ok
+                products_in_same_subcategory = Product.where(subcategory_id: @product.subcategory_id).where.not(id: @product.id)
+              
+                render json: {
+                  data: 'product details.',
+                  product: ActiveModelSerializers::SerializableResource.new(@product, each_serializer: ProductSerializer),
+                  related_products: ActiveModelSerializers::SerializableResource.new(products_in_same_subcategory, each_serializer: ProductSerializer)
+                }, status: :ok
             end
+              
 
             def check_availability
                 zip_code = params[:zip_code].to_s            
