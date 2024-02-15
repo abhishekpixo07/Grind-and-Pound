@@ -1,12 +1,21 @@
 # app/models/product.rb
 class Product < ApplicationRecord
   belongs_to :subcategory
-  has_one_attached :attachment
 
-  # has_many :images, class_name: 'Image', foreign_key: 'product_id'
-  # accepts_nested_attributes_for :images, reject_if: :all_blank, allow_destroy: true
+  has_many :product_images
+  accepts_nested_attributes_for :product_images, allow_destroy: true
 
   has_many :variants
+  accepts_nested_attributes_for :variants, allow_destroy: true
+
+  has_many :product_properties
+  accepts_nested_attributes_for :product_properties, allow_destroy: true
+
+  has_many :reviews
+  
+  def available_for_zip_code?(zip_code)
+    available_zip_codes.include?(zip_code)
+  end
 
   scope :filter_by_price_range, ->(min_price, max_price) do
     where(master_price: min_price..max_price)

@@ -13,8 +13,9 @@ ActiveAdmin.register User do
     id_column
     column :name
     column :email
-    column :phone_number
-    column :country_code
+    column :phone_number do |user|
+      (user.country_code.present? && user.phone_number.present?) ? user.country_code + user.phone_number : ""
+    end
     column :dob
     column :address
     column :state
@@ -32,8 +33,9 @@ ActiveAdmin.register User do
       row :id
       row :name
       row :email
-      row :phone_number
-      row :country_code
+      row :phone_number do |user|
+        (user.country_code.present? && user.phone_number.present?) ? user.country_code + user.phone_number : ""
+      end
       row :dob
       row :address
       row :state
