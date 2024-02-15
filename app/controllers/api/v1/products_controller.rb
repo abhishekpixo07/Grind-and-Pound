@@ -5,16 +5,17 @@ module Api
             before_action :authenticate_user_from_token!
             before_action :current_user
             before_action :set_product, only: [:show]
+            before_action :set_active_storage_url_options
 
             def index
                 @products = filter_products
                 @subcategories = Subcategory.all
                 @categories = Category.all
-                render json: { data: 'products list.', products: @products, subcategories: @subcategories.as_json(only: [:id, :name]), categories: @categories.as_json(only: [:id, :name]) }, status: :ok
+                render json: { data: 'products list.', products: ActiveModelSerializers::SerializableResource.new(@products, each_serializer: ProductSerializer), subcategories: @subcategories.as_json(only: [:id, :name]), categories: @categories.as_json(only: [:id, :name]) }, status: :ok
             end  
         
             def show
-                render json: { data: 'product details.', product: @product }, status: :ok
+                render json: { data: 'product details.', product: ActiveModelSerializers::SerializableResource.new(@product, each_serializer: ProductSerializer) }, status: :ok
             end
         
             private
