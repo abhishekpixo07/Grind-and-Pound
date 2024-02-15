@@ -90,7 +90,9 @@ ActiveAdmin.register Product do
         row :master_price
         row :cost_price
         row :subcategory
-        row :available_for_zip_code
+        row :available_zip_codes do |product|
+          product.available_zip_codes.join(', ')
+        end
         row :created_at
         row :updated_at
         row 'Properties' do |product|
