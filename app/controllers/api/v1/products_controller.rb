@@ -4,7 +4,7 @@ module Api
         class Api::V1::ProductsController < ApplicationController
             before_action :authenticate_user_from_token!
             before_action :current_user
-            before_action :set_product, only: [:show]
+            before_action :set_product, only: [:show, :check_availability]
             before_action :set_active_storage_url_options
 
             def index
@@ -15,7 +15,16 @@ module Api
             end  
         
             def show
-                render json: { data: 'product details.', product: ActiveModelSerializers::SerializableResource.new(@product, each_serializer: ProductSerializer) }, status: :ok
+            render json: { data: 'product details.', product: ActiveModelSerializers::SerializableResource.new(@product, each_serializer: ProductSerializer) }, status: :ok
+            end
+
+            def check_availability
+                zip_code = params[:zip_code].to_s            
+                if @product && @product.available_for_zip_code?(zip_code)
+                  render json: { available: true, product: @product }, status: :ok
+                else
+                  render json: { available: false }, status: :not_found
+                end
             end
         
             private

@@ -31,6 +31,7 @@ Rails.application.routes.draw do
       resources :products, only: [:show] do
         collection do
           post 'index', to: 'products#index'
+          post '/check_availability', to: 'products#check_availability'
         end
       end
       resources :shipping_addresses

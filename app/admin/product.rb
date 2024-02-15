@@ -1,7 +1,8 @@
 # app/admin/product.rb
 
 ActiveAdmin.register Product do
-  permit_params :name, :description, :available_on, :net_wt, :unit, :discontinue_on, :master_price, :cost_price, :subcategory_id, :attachment
+  
+  permit_params :name, :description, :available_on, :net_wt, :unit, :discontinue_on, :master_price, :cost_price, :subcategory_id, product_properties_attributes: [:id, :name, :value, :_destroy], variants_attributes: [:id, :sku, :price, :net_wt, :unit, :_destroy], product_images_attributes: [:id, :attachment, :_destroy], available_zip_codes: []
     
     filter :name
     filter :available_on
@@ -9,6 +10,7 @@ ActiveAdmin.register Product do
     filter :master_price
     filter :subcategory
     filter :attachment, as: :file
+    
 
     index do
       selectable_column
@@ -25,9 +27,13 @@ ActiveAdmin.register Product do
       column :master_price
       column :cost_price
       column :subcategory
-      column :attachment do |pro|
-        image_tag url_for(pro.attachment.present? ? pro.attachment : ''), width:100, height:80, skip_pipeline: true
-      end
+      column 'Properties' do |product|
+        properties_list = product.product_properties.map.with_index(1) do |prop, index|
+          "<li> #{prop.name.titleize}: #{prop.value}</li>"
+        end.join('').html_safe
+      
+        properties_list
+      end     
       actions
     end
   
@@ -42,7 +48,32 @@ ActiveAdmin.register Product do
         f.input :master_price
         f.input :cost_price
         f.input :subcategory
-        f.input :attachment, as: :file
+        f.inputs 'Available Zip Codes' do
+          f.input :available_zip_codes, as: :string, input_html: { value: resource.available_zip_codes.join(', ') }
+        end        
+        f.inputs 'Product Properties' do
+          f.has_many :product_properties, heading: false, allow_destroy: true do |nested_f|
+            nested_f.input :name
+            nested_f.input :value
+          end
+        end
+        f.inputs 'Product Variants' do
+          f.has_many :variants, heading: false, allow_destroy: true do |var|
+            var.input :sku
+            var.input :price
+            var.input :net_wt
+            var.input :unit, :as => :select, :collection => ["g","kg"]
+          end
+        end
+        f.inputs 'Product Images' do
+          f.has_many :product_images, heading: false, allow_destroy: true do |pi|
+            if pi.object&.attachment.attached?
+              pi.input :attachment, as: :file, hint: (image_tag(url_for(pi.object.attachment), width: 100, height: 80))
+            else
+              pi.input :attachment, as: :file
+            end
+          end
+        end        
       end
       f.actions
     end
@@ -59,11 +90,29 @@ ActiveAdmin.register Product do
         row :master_price
         row :cost_price
         row :subcategory
+        row :available_for_zip_code
         row :created_at
         row :updated_at
-        row :attachment do |pro|
-          image_tag url_for(pro.attachment.present? ? pro.attachment : ''), width:100, height:80, skip_pipeline: true
+        row 'Properties' do |product|
+          properties_list = product.product_properties.map.with_index(1) do |prop, index|
+            "<li> #{prop.name.titleize}: #{prop.value}</li>"
+          end.join('').html_safe
+        
+          "<ol>#{properties_list}</ol>".html_safe
+        end  
+        row 'Variants' do |product|
+          variant_list = product.variants.map.with_index(1) do |var, index|
+            "<li> #{var.net_wt + var.unit}: #{var.price}</li>"
+          end.join('').html_safe
+        
+          "<ol>#{variant_list}</ol>".html_safe
+        end   
+        row 'Product Images' do |product|
+            images = product.product_images.map.with_index(1) do |pi, index|
+              pi.attachment.present? ? image_tag(url_for(pi.attachment), width: 100, height: 80, skip_pipeline: true) : ""
+          end
         end
+             
       end
     end
   end
