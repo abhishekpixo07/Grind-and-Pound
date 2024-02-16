@@ -1,7 +1,7 @@
 # app/serializers/product_serializer.rb
 
 class ProductSerializer < ActiveModel::Serializer
-  attributes :id, :name, :description, :available_on, :net_wt, :unit, :discontinue_on, :master_price, :cost_price, :subcategory_id, :attachment_url, :cart, :product_properties, :variants, :reviews
+  attributes :id, :name, :description, :available_on, :net_wt, :unit, :discontinue_on, :master_price, :cost_price, :subcategory_id, :attachment_url, :cart, :product_properties, :variants, :reviews, :overall_average_rating
 
   def attachment_url
     object.product_images.map do |pi|
@@ -37,8 +37,6 @@ class ProductSerializer < ActiveModel::Serializer
 
   def reviews
     object.reviews.map do |review|
-      p ":----------"
-      p review
       {
         id: review.id,
         content: review.content,
@@ -50,10 +48,15 @@ class ProductSerializer < ActiveModel::Serializer
           name: review.user.name,
           email: review.user.email,
           phone_number: review.user.phone_number,
+          profile_pic: review.user.attachment.url
           # Add other user attributes as needed
         }
       }
     end
   end  
+
+  def overall_average_rating
+    object.reviews.average(:rating).to_f
+  end
 
 end

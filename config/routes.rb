@@ -36,7 +36,12 @@ Rails.application.routes.draw do
       end
       resources :shipping_addresses
       resources :carts
-      resources :reviews, only: [:index, :show, :create, :update, :destroy]
+      resources :reviews, only: [:show, :create, :update, :destroy] do 
+        collection do 
+          post 'index', to: 'reviews#index'
+        end
+      end
+
       resources :coupons, only: [:index, :show] do
         member do
           post 'apply'
