@@ -45,7 +45,7 @@ class ProductSerializer < ActiveModel::Serializer
         created_at: review.created_at,
         user: {
           id: review.user.id,
-          name: review.user.name,
+          name: review.user.first_name + review.user.last_name ,
           email: review.user.email,
           phone_number: review.user.phone_number,
           profile_pic: review.user.attachment.url
