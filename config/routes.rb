@@ -32,6 +32,7 @@ Rails.application.routes.draw do
         collection do
           post 'index', to: 'products#index'
           post '/check_availability', to: 'products#check_availability'
+          get 'check/stock/:id', to: 'products#check_stock',as: :check_stock
         end
       end
       resources :shipping_addresses

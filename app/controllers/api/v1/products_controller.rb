@@ -5,6 +5,7 @@ module Api
             before_action :authenticate_user_from_token!
             before_action :current_user
             before_action :set_product, only: [:show, :check_availability]
+            before_action :find_variant, only: [:check_stock]
 
             def index
                 @products = filter_products
@@ -33,11 +34,23 @@ module Api
                 end
             end
         
+            def check_stock
+              if @variant && @variant.quantity > 0
+                render json: { in_stock: true, quantity: @variant.quantity }
+              else
+                render json: { in_stock: false }
+              end
+            end
+
             private
         
             def set_product
-            @product = Product.find_by_id(params[:id]) if params[:id].present?
-            render json: { error: 'product not found.' }, status: :unprocessable_entity if !@product.present?
+              @product = Product.find_by_id(params[:id]) if params[:id].present?
+              render json: { error: 'product not found.' }, status: :unprocessable_entity if !@product.present?
+            end
+
+            def find_variant
+              @variant = Variant.find_by(id: params[:id])
             end
 
             def filter_products
