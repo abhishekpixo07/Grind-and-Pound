@@ -7,7 +7,7 @@ module Api
                 banners = Banner.all.map do |banner|
                     {
                       id: banner.id,
-                      image_url: url_for(banner.attachment),
+                      image_url: url_for(banner.attachment.url),
                     }
                   end
                 render json: { banners: banners }
