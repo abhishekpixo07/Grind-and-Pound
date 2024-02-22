@@ -2,7 +2,7 @@
 
 ActiveAdmin.register Product do
   
-  permit_params :name, :description, :available_on, :net_wt, :unit, :discontinue_on, :master_price, :cost_price, :subcategory_id, product_properties_attributes: [:id, :name, :value, :_destroy], variants_attributes: [:id, :sku, :price, :net_wt, :unit, :_destroy], product_images_attributes: [:id, :attachment, :_destroy], available_zip_codes: []
+  permit_params :name, :description, :available_on, :net_wt, :unit, :discontinue_on, :master_price, :cost_price, :subcategory_id, product_properties_attributes: [:id, :name, :value, :_destroy], variants_attributes: [:id, :sku, :price, :net_wt, :unit, :quantity, :_destroy], product_images_attributes: [:id, :attachment, :_destroy], available_zip_codes: []
     
     filter :name
     filter :available_on
@@ -62,6 +62,7 @@ ActiveAdmin.register Product do
             var.input :sku
             var.input :price
             var.input :net_wt
+            var.input :quantity
             var.input :unit, :as => :select, :collection => ["g","kg"]
           end
         end
@@ -104,7 +105,7 @@ ActiveAdmin.register Product do
         end  
         row 'Variants' do |product|
           variant_list = product.variants.map.with_index(1) do |var, index|
-            "<li> #{var.net_wt + var.unit}: #{var.price}</li>"
+            "<li> Net_wt: #{var.net_wt + var.unit}<br> Price: #{var.price}<br> Quantity: #{var.quantity}</li>"
           end.join('').html_safe
         
           "<ol>#{variant_list}</ol>".html_safe

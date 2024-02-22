@@ -1,6 +1,7 @@
 module Api
   module V1
     class UsersController < ApplicationController
+      require 'open-uri'
       include OtpAuthenticable
       before_action :authenticate_user_with_otp, only: [:create]
       before_action :authenticate_user_from_token!, only: [:confirm_otp, :logout, :profile, :update]
@@ -39,11 +40,9 @@ module Api
       end
  
       def update
-        if params[:user][:attachment].present?
-          @current_user.attachment.purge # Remove the existing attachment if needed
-          @current_user.attachment.attach(params[:user][:attachment])
-        end
-        if @current_user.update(user_params)
+        handle_attachment if params[:user][:attachment].present?
+      
+        if @current_user.update(user_params.except(:attachment))
           render json: @current_user, serializer: Api::V1::UserSerializer, status: :ok
         else
           render json: { errors: @current_user.errors.full_messages }, status: :unprocessable_entity
@@ -53,8 +52,15 @@ module Api
 
       private
 
+      def handle_attachment
+        @current_user.attachment.purge if @current_user.attachment.attached?      
+        result = Cloudinary::Uploader.upload(params[:user][:attachment].tempfile)
+        @current_user.attachment.attach(io: URI.open(result['secure_url']), filename: 'attachment_file')
+        @current_user.attachment.save
+      end
+
       def user_params
-        params.require(:user).permit(:country_code, :phone_number, :title, :first_name, :last_name, :email, :otp, :active, :dob, :doa, :address, :pin_code, :district, :state, :country, :gender, :attachment, :acceptance )
+        params.require(:user).permit(:country_code, :phone_number, :title, :first_name, :last_name, :email, :otp, :active, :dob, :doa, :address, :pin_code, :district, :state, :country, :gender, :acceptance, :attachment)
       end
 
     end
