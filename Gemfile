@@ -51,6 +51,8 @@ gem 'sassc-rails'
 gem 'devise'
 gem 'rack-cors'
 gem 'bootstrap-datepicker-rails'
+gem 'cloudinary'
+
 
 
 
