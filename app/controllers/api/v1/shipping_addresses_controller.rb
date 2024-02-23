@@ -8,7 +8,7 @@ module Api
       
         def index
           @shipping_addresses = ShippingAddress.all
-          render json: @shipping_addresses
+          @shipping_addresses.present? ? (render json: @shipping_addresses) : (render json: { error: 'shipping addresses not found.' }, status: :unprocessable_entity)
         end
       
         def show
@@ -46,7 +46,7 @@ module Api
         end
       
         def shipping_address_params
-          params.require(:shipping_address).permit(:user_id, :full_name, :address_line_1, :address_line_2, :city, :state, :postal_code, :country)
+          params.require(:shipping_address).permit(:user_id, :title, :first_name, :last_name, :address_line_1, :address_line_2, :city, :state, :postal_code, :country, :country_code, :phone_number, :mail)
         end
     end
   end

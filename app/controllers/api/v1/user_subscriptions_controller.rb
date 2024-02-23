@@ -2,9 +2,14 @@
 module Api
     module V1
       class UserSubscriptionsController < ApplicationController
-        before_action :authenticate_user_from_token!
-        before_action :current_user
+        before_action :authenticate_user_from_token!, except: [:plan_list]
+        before_action :current_user, except: [:plan_list]
         before_action :set_user_subscription, only: [:show, :update, :destroy]
+
+        def plan_list 
+          @plans = Plan.all
+          render json: @plans.as_json(only: [:id, :name, :price, :features])
+        end
   
         def index
           @subscriptions = @current_user.subscriptions
