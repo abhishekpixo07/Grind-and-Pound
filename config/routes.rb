@@ -28,6 +28,7 @@ Rails.application.routes.draw do
       resources :orders
       resources :banners, only: [:index]
       resources :user_subscriptions
+      get 'plan/list', to: 'user_subscriptions#plan_list',as: :plan_list
       resources :products, only: [:show] do
         collection do
           post 'index', to: 'products#index'

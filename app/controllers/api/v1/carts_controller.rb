@@ -7,8 +7,8 @@ module Api
         before_action :set_cart, only: [:show, :update, :destroy]
       
         def index
-          @carts = Cart.all
-          render json: @carts
+          @cart = @current_user.cart
+          render json: @cart
         end
       
         def show
@@ -17,13 +17,13 @@ module Api
       
         def create
           @cart = Cart.new(cart_params)
-      
+          @cart.user = @current_user
           if @cart.save
             render json: @cart, status: :created
           else
             render json: @cart.errors, status: :unprocessable_entity
           end
-        end
+        end  
       
         def update
           if @cart.update(cart_params)
