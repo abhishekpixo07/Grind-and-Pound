@@ -24,6 +24,7 @@ Rails.application.routes.draw do
 
       resources :users do
         resources :orders, only: [:index]
+        post 'resend_otp', on: :collection
       end
       resources :orders
       resources :banners, only: [:index]
