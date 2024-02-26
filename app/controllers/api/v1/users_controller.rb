@@ -48,6 +48,10 @@ module Api
           render json: { errors: @current_user.errors.full_messages }, status: :unprocessable_entity
         end
       end
+
+      def resend_otp
+        authenticate_user_with_otp
+      end
       # Other API actions...
 
       private
