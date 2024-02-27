@@ -17,6 +17,7 @@ Rails.application.routes.draw do
       resources :users, only: [:create,:update] do
         collection do
           post :confirm_otp
+          post :account
           get :profile
           delete :logout  # Adding the logout action
         end
