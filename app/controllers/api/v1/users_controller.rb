@@ -23,6 +23,7 @@ module Api
       end  
 
       def account
+        handle_attachment if params[:user][:attachment].present?
         if @user.update(user_params.except(:attachment))
           @user_token = create_session(@user)
           render json: { message: 'user created successfully.', user: @user, authorization: @user_token&.token }, status: :ok
