@@ -4,23 +4,32 @@ module Api
       require 'open-uri'
       include OtpAuthenticable
       before_action :authenticate_user_with_otp, only: [:create]
-      before_action :authenticate_user_from_token!, only: [:confirm_otp, :logout, :profile, :update]
+      before_action :authenticate_user_from_token!, only: [:logout, :profile, :update]
       before_action :current_user, only: [:profile, :update]
+      before_action :find_user, only: [:confirm_otp, :account]
 
       def create
         # The logic is now handled in the OtpAuthenticable concern
       end
 
       def confirm_otp
-        if @current_user.phone_number == params[:phone_number] && "0000" == params[:otp]
-          @current_user.update(otp:nil,active: true)
+        if @user.phone_number == params[:phone_number] && "0000" == params[:otp]
+          @user.update(otp:nil,active: true)
           # Additional logic if needed after OTP confirmation
           render json: { message: 'OTP confirmed successfully.' }, status: :ok
         else
           render json: { errors: ['Invalid OTP or phone number.'], Authorization: @user_token }, status: :unprocessable_entity
         end
+      end  
+
+      def account
+        if @user.update(user_params.except(:attachment))
+          @user_token = create_session(@user)
+          render json: { message: 'user created successfully.', user: @user, authorization: @user_token&.token }, status: :ok
+        else
+          render json: { errors: @user.errors.full_messages }, status: :unprocessable_entity
+        end
       end
-      
 
       def logout        
         if @session.present?
@@ -65,6 +74,11 @@ module Api
 
       def user_params
         params.require(:user).permit(:country_code, :phone_number, :title, :first_name, :last_name, :email, :otp, :active, :dob, :doa, :address, :pin_code, :district, :state, :country, :gender, :acceptance, :attachment)
+      end
+
+      def find_user
+        @user = User.find_by_phone_number(params[:user][:phone_number])
+        render json: { error: 'user not found.' }, status: :unprocessable_entity if !@user.present?
       end
 
     end

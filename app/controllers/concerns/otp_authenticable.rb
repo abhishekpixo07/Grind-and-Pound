@@ -22,6 +22,7 @@ module OtpAuthenticable
   def send_otp_and_set_user(user)
     user.update!(otp: generate_random_otp)
     @user_token = create_session(user)
+    # send_otp_via_twilio(user) if user.phone_number.present?
     user
   end
   
@@ -30,11 +31,12 @@ module OtpAuthenticable
     @user.otp = generate_random_otp
     @user.save!
     @user_token = create_session(@user)
+    # send_otp_via_twilio(user) if @user.phone_number.present?
     @user
   end
   
   def render_response
-    render json: { message: 'OTP sent successfully.', Authorization: @user_token&.token }, status: :ok
+    render json: { message: 'OTP sent successfully.' }, status: :ok
   end
   
 
@@ -72,6 +74,15 @@ module OtpAuthenticable
 
   def format_validation_errors(record)
     record.errors.messages.map { |field, errors| "#{field.to_s.capitalize}: #{errors.join(', ')}" }
+  end
+
+  def send_otp_via_twilio(resource)
+    formatted_phone_number = "+#{resource.country_code}#{resource.phone_number}"
+    $twilio_client.messages.create(
+      from: '+12137845665',
+      to: formatted_phone_number,
+      body: "Your OTP is #{resource.otp}."
+    )
   end
 
 end

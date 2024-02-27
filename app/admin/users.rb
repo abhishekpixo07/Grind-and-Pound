@@ -11,7 +11,7 @@ ActiveAdmin.register User do
   index do
     selectable_column
     id_column
-    column :name
+    column :first_name
     column :email
     column :phone_number do |user|
       (user.country_code.present? && user.phone_number.present?) ? user.country_code + user.phone_number : ""
@@ -31,7 +31,7 @@ ActiveAdmin.register User do
   show do
     attributes_table do
       row :id
-      row :name
+      row :first_name
       row :email
       row :phone_number do |user|
         (user.country_code.present? && user.phone_number.present?) ? user.country_code + user.phone_number : ""
