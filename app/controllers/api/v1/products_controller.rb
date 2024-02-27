@@ -3,7 +3,7 @@ module Api
     module V1 
         class Api::V1::ProductsController < ApplicationController
             skip_before_action :authenticate_user_from_token!
-            skip_before_action :current_user
+            before_action :current_user
             before_action :set_product, only: [:show, :check_availability]
             before_action :find_variant, only: [:check_stock]
 
