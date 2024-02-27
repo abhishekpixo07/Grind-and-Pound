@@ -16,18 +16,23 @@ module Api
         if @user.phone_number == params[:phone_number] && "0000" == params[:otp]
           @user.update(otp:nil,active: true)
           # Additional logic if needed after OTP confirmation
-          render json: { message: 'OTP confirmed successfully.' }, status: :ok
+          if @user.phone_number.present? && @user.first_name.present? && @user.email.present? 
+            @user_token = create_session(@user)
+            render json: { message: 'OTP confirmed successfully.', authorization: @user_token&.token }, status: :ok 
+          else
+            render json: { message: 'OTP confirmed successfully.' }, status: :ok 
+          end
         else
           render json: { errors: ['Invalid OTP or phone number.'], Authorization: @user_token }, status: :unprocessable_entity
         end
       end  
 
       def account
-        handle_attachment if params[:user][:attachment].present?
+        handle_attachment(@user) if params[:user][:attachment].present?
         if @user.update(user_params.except(:attachment))
           @user_token = create_session(@user)
-          render json: { message: 'user created successfully.', user: @user, authorization: @user_token&.token }, status: :ok
-        else
+          render json: { message: 'User created successfully.', user: ActiveModel::SerializableResource.new(@user, serializer: Api::V1::UserSerializer), authorization: @user_token&.token }, status: :ok
+          else
           render json: { errors: @user.errors.full_messages }, status: :unprocessable_entity
         end
       end
@@ -50,7 +55,7 @@ module Api
       end
  
       def update
-        handle_attachment if params[:user][:attachment].present?
+        handle_attachment(@current_user) if params[:user][:attachment].present?
       
         if @current_user.update(user_params.except(:attachment))
           render json: @current_user, serializer: Api::V1::UserSerializer, status: :ok
@@ -66,11 +71,11 @@ module Api
 
       private
 
-      def handle_attachment
-        @current_user.attachment.purge if @current_user.attachment.attached?      
+      def handle_attachment(user)
+        user.attachment.purge if user.attachment.attached?
         result = Cloudinary::Uploader.upload(params[:user][:attachment].tempfile)
-        @current_user.attachment.attach(io: URI.open(result['secure_url']), filename: 'attachment_file')
-        @current_user.attachment.save
+        user.attachment.attach(io: URI.open(result['secure_url']), filename: 'attachment_file')
+        user.attachment.save
       end
 
       def user_params
