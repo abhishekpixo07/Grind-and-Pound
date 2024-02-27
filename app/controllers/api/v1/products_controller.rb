@@ -2,8 +2,8 @@
 module Api
     module V1 
         class Api::V1::ProductsController < ApplicationController
-            before_action :authenticate_user_from_token!
-            before_action :current_user
+            # before_action :authenticate_user_from_token!
+            # before_action :current_user
             before_action :set_product, only: [:show, :check_availability]
             before_action :find_variant, only: [:check_stock]
 
