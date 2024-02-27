@@ -2,7 +2,7 @@
 module Api
     module V1
       class ApplicationController < ActionController::API
-        before_action :authenticate_user_from_token!
+        # before_action :authenticate_user_from_token!
         before_action :set_active_storage_url_options
     
         private
