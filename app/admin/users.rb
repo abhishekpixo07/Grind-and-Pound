@@ -16,11 +16,6 @@ ActiveAdmin.register User do
     column :phone_number do |user|
       (user.country_code.present? && user.phone_number.present?) ? user.country_code + user.phone_number : ""
     end
-    column :dob
-    column :address
-    column :state
-    column :country
-    column :gender
     column :active
     column :attachment do |user|
       image_tag url_for(user.attachment.present? ? user.attachment : ''), width:100, height:80, skip_pipeline: true

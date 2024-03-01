@@ -28,6 +28,10 @@ Rails.application.routes.draw do
         post 'resend_otp', on: :collection
       end
       resources :orders
+      
+      post '/create/payment', to: 'payments#create_payment'
+      post '/capture/payment', to: 'payments#capture_payment'
+      
       resources :banners, only: [:index]
       resources :user_subscriptions
       get 'plan/list', to: 'user_subscriptions#plan_list',as: :plan_list

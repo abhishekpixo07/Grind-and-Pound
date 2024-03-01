@@ -52,6 +52,7 @@ gem 'devise'
 gem 'rack-cors'
 gem 'bootstrap-datepicker-rails'
 gem 'cloudinary'
+gem 'razorpay', '~> 3.2.1'
 
 
 
