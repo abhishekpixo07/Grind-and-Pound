@@ -2,7 +2,8 @@
 
 ActiveAdmin.register Product do
   
-  permit_params :name, :description, :available_on, :net_wt, :unit, :discontinue_on, :master_price, :cost_price, :subcategory_id, product_properties_attributes: [:id, :name, :value, :_destroy], variants_attributes: [:id, :sku, :price, :net_wt, :unit, :quantity, :_destroy], product_images_attributes: [:id, :attachment, :_destroy], available_zip_codes: []
+  permit_params :name, :description, :available_on, :net_wt, :unit, :discontinue_on, :master_price, :cost_price, :subcategory_id, textures_attributes: [:id, :name, :_destroy], product_properties_attributes: [:id, :name, :value, :_destroy], variants_attributes: [:id, :sku, :price, :net_wt, :unit, :quantity, :_destroy], product_images_attributes: [:id, :attachment, :_destroy], available_zip_codes: []
+
     
     filter :name
     filter :available_on
@@ -24,8 +25,6 @@ ActiveAdmin.register Product do
         pro.unit.present? ? pro.net_wt + pro.unit : ""
       end
       column :discontinue_on
-      column :master_price
-      column :cost_price
       column :subcategory
       column 'Properties' do |product|
         properties_list = product.product_properties.map.with_index(1) do |prop, index|
@@ -33,6 +32,13 @@ ActiveAdmin.register Product do
         end.join('').html_safe
       
         properties_list
+      end   
+      column 'Texture' do |product|
+        texture = product.textures.map.with_index(1) do |tex, index|
+          "<li> Title: #{tex.name.titleize}</li>"
+        end.join('').html_safe
+      
+        texture
       end     
       actions
     end
@@ -50,7 +56,12 @@ ActiveAdmin.register Product do
         f.input :subcategory
         f.inputs 'Available Zip Codes' do
           f.input :available_zip_codes, as: :string, input_html: { value: resource.available_zip_codes.join(', ') }
-        end        
+        end     
+        f.inputs 'Product Texture' do
+          f.has_many :textures, heading: false, allow_destroy: true do |nested_f|
+            nested_f.input :name
+          end
+        end   
         f.inputs 'Product Properties' do
           f.has_many :product_properties, heading: false, allow_destroy: true do |nested_f|
             nested_f.input :name
@@ -96,6 +107,13 @@ ActiveAdmin.register Product do
         end
         row :created_at
         row :updated_at
+        row 'Textures' do |product|
+          textures = product.textures.map.with_index(1) do |tex, index|
+            "<li> Title: #{tex.name.titleize}</li>"
+          end.join('').html_safe
+        
+          "<ol>#{textures}</ol>".html_safe
+        end  
         row 'Properties' do |product|
           properties_list = product.product_properties.map.with_index(1) do |prop, index|
             "<li> #{prop.name.titleize}: #{prop.value}</li>"

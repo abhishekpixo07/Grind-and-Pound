@@ -8,6 +8,9 @@ class Product < ApplicationRecord
   has_many :variants
   accepts_nested_attributes_for :variants, allow_destroy: true
 
+  has_many :textures
+  accepts_nested_attributes_for :textures, allow_destroy: true
+
   has_many :product_properties
   accepts_nested_attributes_for :product_properties, allow_destroy: true
 

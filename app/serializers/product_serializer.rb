@@ -1,7 +1,7 @@
 # app/serializers/product_serializer.rb
 
 class ProductSerializer < ActiveModel::Serializer
-  attributes :id, :name, :description, :available_on, :net_wt, :unit, :discontinue_on, :master_price, :cost_price, :subcategory_id, :attachment_url, :cart, :product_properties, :variants, :reviews, :overall_average_rating
+  attributes :id, :name, :description, :available_on, :net_wt, :unit, :discontinue_on, :master_price, :cost_price, :subcategory_id, :attachment_url, :cart, :is_texture, :textures, :product_properties, :variants, :reviews, :overall_average_rating
 
   def attachment_url
     object.product_images.map do |pi|
@@ -12,6 +12,24 @@ class ProductSerializer < ActiveModel::Serializer
   def cart
     false
   end
+
+  def textures
+    if is_texture == true
+      object.textures.map do |tex|
+        {
+          id: tex.id,
+          name: tex.name,
+        }
+      end
+    else
+      []
+    end
+  end
+
+  def is_texture
+    (object.subcategory.category.name == "Wheat flour") ? true : false
+  end
+
 
   def product_properties
     object.product_properties.map do |pp|
@@ -56,7 +74,7 @@ class ProductSerializer < ActiveModel::Serializer
   end  
 
   def overall_average_rating
-    object.reviews.average(:rating).to_f
+    object.reviews.average(:rating).to_f.round(0)
   end
 
 end
