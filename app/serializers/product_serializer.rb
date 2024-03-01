@@ -64,7 +64,11 @@ class ProductSerializer < ActiveModel::Serializer
         created_at: review.created_at,
         user: {
           id: review.user.id,
-          name: "#{review.user.title.to_s} #{review.user.first_name.to_s} #{review.user.last_name.to_s}".strip ,
+          name: [
+            review.user.title,
+            review.user.first_name,
+            review.user.last_name
+          ].reject(&:blank?).join(' ').strip,
           email: review.user.email,
           phone_number: review.user.phone_number,
           profile_pic: review.user.attachment.url
