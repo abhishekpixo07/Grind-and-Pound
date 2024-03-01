@@ -47,6 +47,7 @@ class ProductSerializer < ActiveModel::Serializer
         id: variant.id,
         sku: variant.sku,
         price: variant.price,
+        discount_price: variant.discount_price,
         net_wt: variant.net_wt,
         unit: variant.unit
       }
