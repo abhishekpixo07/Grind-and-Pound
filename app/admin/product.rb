@@ -2,7 +2,7 @@
 
 ActiveAdmin.register Product do
   
-  permit_params :name, :description, :available_on, :net_wt, :unit, :discontinue_on, :master_price, :cost_price, :subcategory_id, textures_attributes: [:id, :name, :_destroy], product_properties_attributes: [:id, :name, :value, :_destroy], variants_attributes: [:id, :sku, :price, :net_wt, :unit, :quantity, :_destroy], product_images_attributes: [:id, :attachment, :_destroy], available_zip_codes: []
+  permit_params :name, :description, :available_on, :net_wt, :unit, :discontinue_on, :master_price, :cost_price, :subcategory_id, textures_attributes: [:id, :name, :_destroy], product_properties_attributes: [:id, :name, :value, :_destroy], variants_attributes: [:id, :sku, :price, :discount_price, :net_wt, :unit, :quantity, :_destroy], product_images_attributes: [:id, :attachment, :_destroy], available_zip_codes: []
 
     
     filter :name
@@ -72,6 +72,7 @@ ActiveAdmin.register Product do
           f.has_many :variants, heading: false, allow_destroy: true do |var|
             var.input :sku
             var.input :price
+            var.input :discount_price
             var.input :net_wt
             var.input :quantity
             var.input :unit, :as => :select, :collection => ["g","kg"]
@@ -123,7 +124,7 @@ ActiveAdmin.register Product do
         end  
         row 'Variants' do |product|
           variant_list = product.variants.map.with_index(1) do |var, index|
-            "<li> Net_wt: #{var.net_wt + var.unit}<br> Price: #{var.price}<br> Quantity: #{var.quantity}</li>"
+            "<li> Net_wt: #{var.net_wt + var.unit}<br> Price: #{var.price}<br> Discount Price: #{var.discount_price}<br> Quantity: #{var.quantity}</li>"
           end.join('').html_safe
         
           "<ol>#{variant_list}</ol>".html_safe
