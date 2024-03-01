@@ -50,6 +50,11 @@ Rails.application.routes.draw do
         end
       end
 
+      resources :vouchers, only: [:index, :show]
+      resources :our_stories, only: [:index, :show]
+      resources :blogs, only: [:index, :show]
+      resources :faqs, only: [:index]
+
       resources :coupons, only: [:index, :show] do
         member do
           post 'apply'

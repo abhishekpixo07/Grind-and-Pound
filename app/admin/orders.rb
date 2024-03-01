@@ -40,6 +40,5 @@ ActiveAdmin.register Order do
         end
       end
     end
-    active_admin_comments
   end
 end
