@@ -1,7 +1,9 @@
 # app/admin/blog.rb
 
 ActiveAdmin.register Blog do
-    permit_params :title, :description, :image
+  menu parent: 'Blog', label: 'Blogs', priority: 2
+
+    permit_params :title, :description, :image, :blog_category_id
   
     index do
       selectable_column
@@ -15,6 +17,7 @@ ActiveAdmin.register Blog do
   
     form do |f|
       f.inputs 'Voucher Details' do
+        f.input :blog_category
         f.input :title
         f.input :description, as: :text
         f.input :image, as: :file

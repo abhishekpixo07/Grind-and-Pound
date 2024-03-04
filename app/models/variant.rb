@@ -1,5 +1,9 @@
 class Variant < ApplicationRecord
   belongs_to :product
+  validates :sku, uniqueness: true, presence: true
+  validates :net_wt, presence: true
+  validates :unit, presence: true
+
   validates :quantity, numericality: { greater_than_or_equal_to: 0 }
 
   attribute :quantity, :integer, default: 0
