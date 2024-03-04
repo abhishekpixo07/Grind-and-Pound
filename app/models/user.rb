@@ -1,6 +1,5 @@
 class User < ApplicationRecord
     validates :phone_number, uniqueness: true, presence: true
-    validates :email, uniqueness: true, presence: true
 
     has_many :sessions
 

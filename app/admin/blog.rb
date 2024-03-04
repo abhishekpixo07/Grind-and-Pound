@@ -9,6 +9,7 @@ ActiveAdmin.register Blog do
       selectable_column
       id_column
       column :title
+      column :blog_category
       column :description do |blog|
         truncate(blog.description, length: 50, separator: ' ')
       end
@@ -29,6 +30,7 @@ ActiveAdmin.register Blog do
       attributes_table do
         row :title
         row :description
+        row :category_id
         row :image do |our_story|
             image_tag(our_story.image.url, width: 200) if our_story.image.present?
         end
