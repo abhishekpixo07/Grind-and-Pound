@@ -10,7 +10,8 @@ module Api
         end
   
         def show
-          render json: @blog
+          blogs_in_same_category = Blog.where(blog_category_id: @blog.blog_category_id).where.not(id: @blog.id)
+          render json: { blog: @blog, blogs_in_same_category: blogs_in_same_category }
         end
   
         private

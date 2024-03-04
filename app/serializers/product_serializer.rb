@@ -1,12 +1,26 @@
 # app/serializers/product_serializer.rb
 
 class ProductSerializer < ActiveModel::Serializer
-  attributes :id, :name, :description, :available_on, :net_wt, :unit, :discontinue_on, :master_price, :cost_price, :subcategory_id, :attachment_url, :cart, :is_texture, :textures, :product_properties, :variants, :reviews, :overall_average_rating
+  attributes :id, :name, :description, :available_on, :net_wt, :unit, :discontinue_on, :master_price, :cost_price, :subcategory_id, :attachment_url, :cart, :is_texture, :textures, :product_properties, :variants, :reviews, :overall_average_rating, :category,:subcategory
 
   def attachment_url
     object.product_images.map do |pi|
       pi.attachment.url if pi.attachment.attached?
     end.compact
+  end
+
+  def category
+    {
+      id: object.subcategory.category.id,
+      name: object.subcategory.category.name
+    }
+  end
+
+  def subcategory
+    {
+      id: object.subcategory.id,
+      name: object.subcategory.name
+    }
   end
 
   def cart

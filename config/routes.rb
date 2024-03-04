@@ -54,6 +54,9 @@ Rails.application.routes.draw do
       resources :our_stories, only: [:index, :show]
       resources :blogs, only: [:index, :show]
       resources :faqs, only: [:index]
+      
+      post '/refer_without_login', to: 'referrals#refer_without_login'
+      post '/refer_with_login', to: 'referrals#refer_with_login'
 
       resources :coupons, only: [:index, :show] do
         member do

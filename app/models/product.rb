@@ -1,5 +1,12 @@
 # app/models/product.rb
 class Product < ApplicationRecord
+  validates :name, uniqueness: true, presence: true
+  validates :net_wt, presence: true
+  validates :master_price, presence: true
+  validates :cost_price, presence: true
+  validates :unit, presence: true
+  validates :available_zip_codes, presence: true
+
   belongs_to :subcategory
 
   has_many :product_images

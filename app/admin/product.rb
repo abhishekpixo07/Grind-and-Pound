@@ -1,6 +1,8 @@
 # app/admin/product.rb
 
 ActiveAdmin.register Product do
+
+  menu parent: 'Category', label: 'Product', priority: 3
   
   permit_params :name, :description, :available_on, :net_wt, :unit, :discontinue_on, :master_price, :cost_price, :subcategory_id, textures_attributes: [:id, :name, :_destroy], product_properties_attributes: [:id, :name, :value, :_destroy], variants_attributes: [:id, :sku, :price, :discount_price, :net_wt, :unit, :quantity, :_destroy], product_images_attributes: [:id, :attachment, :_destroy], available_zip_codes: []
 
@@ -45,6 +47,7 @@ ActiveAdmin.register Product do
   
     form do |f|
       f.inputs 'Product Details' do
+        f.input :subcategory
         f.input :name
         f.input :description
         f.input :net_wt
@@ -53,7 +56,6 @@ ActiveAdmin.register Product do
         f.input :discontinue_on, as: :string, input_html: { class: 'datepicker' }
         f.input :master_price
         f.input :cost_price
-        f.input :subcategory
         f.inputs 'Available Zip Codes' do
           f.input :available_zip_codes, as: :string, input_html: { value: resource.available_zip_codes.join(', ') }
         end     
