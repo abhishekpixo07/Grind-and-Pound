@@ -7,6 +7,8 @@ module Api
                 banners = Banner.all.map do |banner|
                     {
                       id: banner.id,
+                      title: banner.title,
+                      text_color: banner.text_color,
                       image_url: url_for(banner.attachment.url),
                     }
                   end
