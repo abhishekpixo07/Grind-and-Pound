@@ -5,7 +5,7 @@ class Product < ApplicationRecord
   validates :master_price, presence: true
   validates :cost_price, presence: true
   validates :unit, presence: true
-  validates :available_zip_codes, presence: true
+  # validates :available_zip_codes, presence: true
 
   belongs_to :subcategory
 
