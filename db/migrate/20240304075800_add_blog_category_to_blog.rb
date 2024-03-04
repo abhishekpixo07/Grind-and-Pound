@@ -8,6 +8,6 @@ class AddBlogCategoryToBlog < ActiveRecord::Migration[7.0]
     end
 
     # Now, make the column NOT NULL
-    change_column_null :faqs, :faq_category_id, false
+    change_column_null :blogs, :blog_category_id, false
   end
 end
