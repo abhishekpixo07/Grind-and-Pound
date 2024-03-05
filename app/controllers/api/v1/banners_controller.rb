@@ -8,6 +8,7 @@ module Api
                     {
                       id: banner.id,
                       title: banner.title,
+                      banner_type: banner.banner_type,
                       text_color: banner.text_color,
                       image_url: url_for(banner.attachment.url),
                     }
