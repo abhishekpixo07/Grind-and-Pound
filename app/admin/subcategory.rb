@@ -14,10 +14,10 @@ ActiveAdmin.register Subcategory do
   
     form do |f|
       f.inputs 'Subcategory Details' do
+        f.input :category
         f.input :name
         f.input :image
         f.input :description
-        f.input :category
       end
       f.actions
     end
