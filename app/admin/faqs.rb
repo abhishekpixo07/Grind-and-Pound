@@ -7,7 +7,9 @@ ActiveAdmin.register Faq do
     selectable_column
     id_column
     column :question
-    column :answer
+    column :answer do |faq|
+      truncate(faq.answer, length: 50, separator: ' ')
+    end
     column :faq_category
     actions
   end
@@ -17,9 +19,9 @@ ActiveAdmin.register Faq do
 
   form do |f|
     f.inputs 'FAQ Details' do
+      f.input :faq_category
       f.input :question
       f.input :answer, as: :text
-      f.input :faq_category
     end
     f.actions
   end
