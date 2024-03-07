@@ -7,7 +7,7 @@ module Api
         before_action :set_cart, only: [:show, :update, :destroy]
       
         def index
-          @cart = @current_user.cart
+          @cart = @current_user.carts
           render json: @cart
         end
       
@@ -35,13 +35,14 @@ module Api
       
         def destroy
           @cart.destroy
-          head :no_content
+          render json: { error: 'cart clear successfully.' }, status: :ok
         end
       
         private
       
         def set_cart
-          @cart = Cart.find(params[:id])
+          @cart = Cart.find_by_id(params[:id])
+          render json: { error: 'cart not found.' }, status: :unprocessable_entity if !@cart.present?
         end
       
         def cart_params
