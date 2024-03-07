@@ -1,54 +1,64 @@
-# app/controllers/carts_controller.rb
+# app/controllers/api/v1/carts_controller.rb
 module Api
-  module V1     
+  module V1
     class CartsController < ApplicationController
-        before_action :authenticate_user_from_token!
-        before_action :current_user
-        before_action :set_cart, only: [:show, :update, :destroy]
+      before_action :authenticate_user_from_token!
+      before_action :current_user
+      before_action :set_cart, only: [:show, :update]
+      before_action :set_cart_item, only: [:destroy]
+
+      def show
+        render json: @cart
+      end
+
+      def create
+        @cart = @current_user.cart || Cart.create(user: @current_user)
+        if @cart.persisted?
+          product = Product.find(params[:product_id])
+          quantity = params[:quantity].to_i
       
-        def index
-          @cart = @current_user.carts
-          render json: @cart
+          # Check if the cart already has the product, update quantity if so
+          cart_item = @cart.cart_items.find_or_initialize_by(product: product)
+          cart_item.update(quantity: quantity)
+      
+          render json: {
+            cart: ActiveModelSerializers::SerializableResource.new(@cart, serializer: CartSerializer)
+          }, status: :created
+        else
+          render json: @cart.errors, status: :unprocessable_entity
         end
+      end
       
-        def show
-          render json: @cart
+      def update
+        product = Product.find(params[:product_id])
+        quantity = params[:quantity].to_i
+        cart_item = @cart.cart_items.find_by(product: product)
+        if cart_item
+          cart_item.update(quantity: quantity)
+        else
+          @cart.cart_items.create(product: product, quantity: quantity)
         end
-      
-        def create
-          @cart = Cart.new(cart_params)
-          @cart.user = @current_user
-          if @cart.save
-            render json: @cart, status: :created
-          else
-            render json: @cart.errors, status: :unprocessable_entity
-          end
-        end  
-      
-        def update
-          if @cart.update(cart_params)
-            render json: @cart
-          else
-            render json: @cart.errors, status: :unprocessable_entity
-          end
-        end
-      
-        def destroy
-          @cart.destroy
-          render json: { error: 'cart clear successfully.' }, status: :ok
-        end
-      
-        private
-      
-        def set_cart
-          @cart = Cart.find_by_id(params[:id])
-          render json: { error: 'cart not found.' }, status: :unprocessable_entity if !@cart.present?
-        end
-      
-        def cart_params
-          params.require(:cart).permit(:user_id, :product_id, :quantity, :purchased)
-        end
+        render json: @cart
+      rescue ActiveRecord::RecordNotFound => e
+        render json: { error: e.message }, status: :not_found
+      end
+
+      def destroy
+        @cart_item.destroy
+        render json: { message: 'Cart cleared successfully.' }, status: :ok
+      end
+
+      private
+
+      def set_cart
+        @cart = @current_user.cart
+        render json: { error: 'cart not found.' }, status: :unprocessable_entity if !@cart.present?
+      end
+
+      def set_cart_item
+        @cart_item = CartItem.find_by_id(params[:id])
+        render json: { error: 'CartItem not found.' }, status: :unprocessable_entity if !@cart_item.present?
+      end
     end
   end
-end  
-    
+end
