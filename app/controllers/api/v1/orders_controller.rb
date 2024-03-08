@@ -6,27 +6,28 @@ module Api
             before_action :set_order, only: [:show, :update, :destroy]
 
             def show
-                render json: @order
+                render json: @order, include: [:user, :shipping_address, :payment]
             end
+        
 
             def index
-                @orders = @current_user.orders
+                @orders = @current_user.orders.includes(:user, :shipping_address, :payment)
                 render json: @orders
             end
-
+        
             def create
                 @order = Order.new(order_params)
                 @order.user = @current_user
                 if @order.save
-                render json: @order, status: :created
+                    render json: @order, status: :created, include: [:user, :shipping_address, :payment]
                 else
-                render json: @order.errors, status: :unprocessable_entity
+                    render json: @order.errors, status: :unprocessable_entity
                 end
             end
 
             def update
                 if @order.update(order_params)
-                render json: @order
+                    render json: @order, status: :updated, include: [:user, :shipping_address, :payment]
                 else
                 render json: @order.errors, status: :unprocessable_entity
                 end
@@ -45,7 +46,7 @@ module Api
             end
 
             def order_params
-                params.require(:order).permit(:shipping_address_id, :total_amount, :status, :payment_method, :notes)
+                params.require(:order).permit(:shipping_address_id, :sub_total, :discount_amount, :grand_total, :shipping_fee, :total_amount, :status, :payment_method, :delivery_method, :notes)
             end
         end
     end

@@ -46,7 +46,7 @@ module Api
         end
       
         def shipping_address_params
-          params.require(:shipping_address).permit(:title, :first_name, :last_name, :address_line_1, :address_line_2, :city, :state, :postal_code, :country, :country_code, :phone_number, :mail)
+          params.require(:shipping_address).permit(:title, :first_name, :last_name, :address_line_1, :address_line_2, :city, :state, :postal_code, :country, :country_code, :phone_number, :mail, :default)
         end
     end
   end
