@@ -5,7 +5,7 @@ module Api
       before_action :authenticate_user_from_token!
       before_action :current_user
       before_action :set_cart, only: [:show, :update]
-      before_action :set_cart_item, only: [:destroy]
+      before_action :set_product_item, only: [:destroy]
 
       def show
         render json: @cart
@@ -44,7 +44,8 @@ module Api
       end
 
       def destroy
-        @cart_item.destroy
+        cart_item = @current_user.cart.cart_items.find_by(product: @product)
+        cart_item.destroy if cart_item.present?
         render json: { message: 'Cart Item cleared successfully.' }, status: :ok
       end
 
@@ -55,9 +56,9 @@ module Api
         render json: { error: 'cart not found.' }, status: :unprocessable_entity if !@cart.present?
       end
 
-      def set_cart_item
-        @cart_item = CartItem.find_by_id(params[:id])
-        render json: { error: 'CartItem not found.' }, status: :unprocessable_entity if !@cart_item.present?
+      def set_product_item
+        @product = Product.find_by_id(params[:id])
+        render json: { error: 'Product not found.' }, status: :unprocessable_entity if !@product.present?
       end
     end
   end
