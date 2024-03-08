@@ -45,7 +45,7 @@ module Api
 
       def destroy
         @cart_item.destroy
-        render json: { message: 'Cart cleared successfully.' }, status: :ok
+        render json: { message: 'Cart Item cleared successfully.' }, status: :ok
       end
 
       private

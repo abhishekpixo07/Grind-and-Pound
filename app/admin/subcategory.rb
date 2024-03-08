@@ -1,6 +1,10 @@
 ActiveAdmin.register Subcategory do
     menu parent: 'Category', label: 'Subcategory', priority: 2
     permit_params :name, :image, :description, :category_id
+
+    action_item :add_product, only: :show do
+      link_to 'Add Product', new_admin_product_path
+    end
   
     index do
       selectable_column
