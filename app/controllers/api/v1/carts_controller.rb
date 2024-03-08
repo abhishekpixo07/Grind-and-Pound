@@ -4,7 +4,7 @@ module Api
     class CartsController < ApplicationController
       before_action :authenticate_user_from_token!
       before_action :current_user
-      before_action :set_cart
+      before_action :set_cart, only: [:index, :update, :destroy]
       before_action :set_product_item, only: [:update, :destroy]
 
       def index
@@ -12,7 +12,7 @@ module Api
       end
 
       def create
-        @cart || Cart.create(user: @current_user)
+        @cart = @current_user.cart || Cart.create(user: @current_user)
         if @cart.persisted?
           product = Product.find(params[:product_id])
           quantity = params[:quantity].to_i
