@@ -4,15 +4,15 @@ module Api
     class CartsController < ApplicationController
       before_action :authenticate_user_from_token!
       before_action :current_user
-      before_action :set_cart, only: [:show, :update]
-      before_action :set_product_item, only: [:destroy]
+      before_action :set_cart
+      before_action :set_product_item, only: [:update, :destroy]
 
       def index
-        render json: @current_user.cart
+        render json: @cart
       end
 
       def create
-        @cart = @current_user.cart || Cart.create(user: @current_user)
+        @cart || Cart.create(user: @current_user)
         if @cart.persisted?
           product = Product.find(params[:product_id])
           quantity = params[:quantity].to_i
@@ -30,7 +30,7 @@ module Api
       end
       
       def update
-        product = Product.find(params[:product_id])
+        product = Product.find(params[:id])
         quantity = params[:quantity].to_i
         cart_item = @cart.cart_items.find_by(product: product)
         if cart_item
@@ -44,7 +44,7 @@ module Api
       end
 
       def destroy
-        cart_item = @current_user.cart.cart_items.find_by(product: @product)
+        cart_item = @cart.cart_items.find_by(product: @product)
         cart_item.destroy if cart_item.present?
         render json: { message: 'Cart Item cleared successfully.' }, status: :ok
       end
