@@ -19,6 +19,19 @@ module Api
                 @order = Order.new(order_params)
                 @order.user = @current_user
                 if @order.save
+                    @cart_items = @current_user.cart.cart_items
+
+                    @cart_items.each do |cart_item|
+                      product = cart_item.product
+                      quantity = cart_item.quantity
+              
+                      @order.order_items.create(
+                        product: product,
+                        quantity: quantity,
+                        unit_price: product.master_price, # Adjust as needed
+                        total_price: quantity * product.master_price
+                      )
+                    end
                     render json: @order, status: :created, include: [:user, :shipping_address, :payment]
                 else
                     render json: @order.errors, status: :unprocessable_entity

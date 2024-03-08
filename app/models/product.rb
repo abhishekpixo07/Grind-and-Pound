@@ -5,7 +5,9 @@ class Product < ApplicationRecord
   validates :master_price, presence: true
   validates :cost_price, presence: true
   validates :unit, presence: true
-  # validates :available_zip_codes, presence: true
+  has_many :order_items, dependent: :destroy
+
+  # validates :available_zip_codes, presence: { message: "must be present" }
 
   belongs_to :subcategory
 
