@@ -12,4 +12,12 @@ class Order < ApplicationRecord
     def self.ransackable_associations(auth_object = nil)
         ["payment", "shipping_address", "user","order_items"]
     end
+
+    before_update :order_status_changed, if: :status_changed?
+
+    private
+  
+    def order_status_changed
+      OrderMailer.order_status(self.user, self).deliver_now
+    end
 end

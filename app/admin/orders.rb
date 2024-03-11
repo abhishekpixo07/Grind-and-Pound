@@ -21,7 +21,7 @@ ActiveAdmin.register Order do
    # Edit view
   form do |f|
     f.inputs "Order Details" do
-      f.input :status, as: :select, collection: ['Pending', 'Processing', 'Shipped', 'Delivered'], include_blank: false
+      f.input :status, as: :select, collection: ['Placed', 'Processing', 'Shipped', 'Delivered', 'Cancelled', 'Returned', 'Refunded', 'Out for Delivery', 'Failed Delivery', 'Awaiting Payment', 'Payment Failed'], include_blank: false
     end
     f.actions
   end
