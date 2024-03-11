@@ -110,33 +110,52 @@ ActiveAdmin.register Product do
         end
         row :created_at
         row :updated_at
-        row 'Textures' do |product|
-          textures = product.textures.map.with_index(1) do |tex, index|
-            "<li> Title: #{tex.name.titleize}</li>"
-          end.join('').html_safe
-        
-          "<ol>#{textures}</ol>".html_safe
-        end  
-        row 'Properties' do |product|
-          properties_list = product.product_properties.map.with_index(1) do |prop, index|
-            "<li> #{prop.name.titleize}: #{prop.value}</li>"
-          end.join('').html_safe
-        
-          "<ol>#{properties_list}</ol>".html_safe
-        end  
-        row 'Variants' do |product|
-          variant_list = product.variants.map.with_index(1) do |var, index|
-            "<li> Net_wt: #{var.net_wt + var.unit}<br> Price: #{var.price}<br> Discount Price: #{var.discount_price}<br> Quantity: #{var.quantity}</li>"
-          end.join('').html_safe
-        
-          "<ol>#{variant_list}</ol>".html_safe
-        end   
-        row 'Product Images' do |product|
-            images = product.product_images.map.with_index(1) do |pi, index|
-              pi.attachment.present? ? image_tag(url_for(pi.attachment), width: 100, height: 80, skip_pipeline: true) : ""
+        panel 'Textures' do
+          ul do
+            product.textures.each_with_index do |tex, index|
+              li style: 'list-style-type: disc;' do
+                "Title: #{tex.name.titleize}"
+              end
+            end
           end
         end
-             
+        
+        panel 'Properties' do
+          ul do
+            product.product_properties.each_with_index do |prop, index|
+              li style: 'list-style-type: square;' do
+                "#{prop.name.titleize}: #{prop.value}"
+              end
+            end
+          end
+        end
+        
+        panel 'Variants' do
+          ul do
+            product.variants.each_with_index do |var, index|
+              li style: 'list-style-type: circle;' do
+                "Net Weight: #{var.net_wt + var.unit}<br>
+                Price: #{var.price}<br>
+                Discount Price: #{var.discount_price}<br>
+                Quantity: #{var.quantity}".html_safe
+              end
+            end
+          end
+        end
+        
+        panel 'Product Images' do
+          div style: 'display: flex; flex-wrap: nowrap; overflow-x: auto;' do
+            product.product_images.each_with_index do |pi, index|
+              div style: 'flex: 0 0 auto; margin-right: 10px;' do
+                if pi.attachment.present?
+                  image_tag(url_for(pi.attachment), width: 100, height: 80, skip_pipeline: true)
+                else
+                  "No image available"
+                end
+              end
+            end
+          end
+        end          
       end
     end
   end
