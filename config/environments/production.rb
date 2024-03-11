@@ -72,6 +72,21 @@ Rails.application.configure do
   # the I18n.default_locale when a translation cannot be found).
   config.i18n.fallbacks = true
 
+  config.action_mailer.perform_deliveries = true
+  config.action_mailer.raise_delivery_errors = true
+
+  config.action_mailer.default_url_options = { host: '23.20.204.62', port: 3000 }
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {
+    address: 'smtp.gmail.com',
+    port: 587,
+    domain: 'gmail.com',
+    user_name: 'abhishekkumar264595@gmail.com',
+    password: 'xicc spvx uvem lgpi',
+    authentication: 'plain',
+    enable_starttls_auto: true
+  }
+
   # Don't log any deprecations.
   config.active_support.report_deprecations = false
 
