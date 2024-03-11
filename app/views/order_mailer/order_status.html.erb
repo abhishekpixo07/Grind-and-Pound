@@ -1,0 +1,29 @@
+<h1>Order Status: <%= @status %></h1>
+<p>
+ <% case @status %>
+ <% when 'Placed' %>
+    Your order has been placed successfully. Thank you for your purchase! We're preparing your order for shipment.
+ <% when 'Processing' %>
+    Your order is currently being processed. Our team is working diligently to ensure your order is ready for shipment.
+ <% when 'Shipped' %>
+    Your order has been shipped. You can track your shipment for more details. Please allow 3-5 business days for delivery.
+ <% when 'Delivered' %>
+    Your order has been successfully delivered. Enjoy your products! If you have any questions or need further assistance, please contact us.
+ <% when 'Cancelled' %>
+    Unfortunately, your order has been cancelled. This may have occurred due to a variety of reasons, such as payment issues or inventory availability. If you have any questions or need further assistance, please contact us.
+ <% when 'Returned' %>
+    Your order has been returned. We're processing your return and will notify you once the refund has been processed.
+ <% when 'Refunded' %>
+    Your order has been refunded. The amount will be credited to your account. Please allow 3-5 business days for the refund to be reflected in your account.
+ <% when 'Out for Delivery' %>
+    Your order is currently out for delivery. We appreciate your patience as we work to get your order to you as quickly as possible.
+ <% when 'Failed Delivery' %>
+    Delivery of your order has failed. This could be due to various reasons such as incorrect address information or unavailability of the delivery service. Please contact us for assistance.
+ <% when 'Awaiting Payment' %>
+    Your order is awaiting payment. Please complete the payment process to proceed. If you have any questions or need further assistance, please contact us.
+ <% when 'Payment Failed' %>
+    Unfortunately, the payment for your order has failed. This could be due to various reasons such as insufficient funds or payment method issues. Please review and update your payment details. If you have any questions or need further assistance, please contact us.
+ <% else %>
+    No specific message for this order status. If you have any questions or need further assistance, please contact us.
+ <% end %>
+</p>
