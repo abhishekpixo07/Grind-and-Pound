@@ -1,6 +1,13 @@
 # app/admin/order.rb
 
 ActiveAdmin.register Order do
+  permit_params :status
+
+  filter :id
+  filter :user
+  filter :status
+  filter :payment_method
+  
 
   index do
     selectable_column
@@ -11,14 +18,43 @@ ActiveAdmin.register Order do
     actions
   end
 
+   # Edit view
+  form do |f|
+    f.inputs "Order Details" do
+      f.input :status, as: :select, collection: ['Pending', 'Processing', 'Shipped', 'Delivered'], include_blank: false
+    end
+    f.actions
+  end
+
   show do
     attributes_table do
-      row :user
+      row :status do |resource|
+        status_color = case resource.status
+                        when 'Pending'
+                          'orange'
+                        when 'Processing'
+                          'blue'
+                        when 'Shipped'
+                          'green'
+                        when 'Delivered'
+                          'purple'
+                        else
+                          'black'
+                        end
+          content_tag(:span, resource.status, style: "color: #{status_color}; font-weight: bold; text-decoration: underline;", class: "status-tag")
+      end 
+      row :user 
+      row :sub_total
+      row :discount_price
       row :total_amount
-      row :status
+      row :grand_total
+      row :shipping_fee
+      row :delivery_method
       row :payment_method
       row :paid_at
+      row :rozarpay_order_id
       row :shipped_at
+      row :delivery_date
       row :notes
       row :gift_wrap
       row :tracking_number
@@ -26,6 +62,7 @@ ActiveAdmin.register Order do
 
       panel "Payment Information" do
         attributes_table_for resource.payment do
+          row :razorpay_payment_id
           row :payment_method do
             order.payment_method
           end          
@@ -34,7 +71,6 @@ ActiveAdmin.register Order do
             number_to_currency(order.payment.payment_amount, unit: '₹') # Adjust currency as needed
           end
           row :created_at
-          row :updated_at
         end
       end if resource.payment.present?
 
