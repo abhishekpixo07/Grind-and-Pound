@@ -15,3 +15,39 @@
 // For example, to change the default status-tag color:
 //
 //   .status_tag { background: #6090DB; }
+.status-tag {
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f0f0f0;
+    display: inline-block;
+    margin-right: 5px;
+   }
+
+/* Style for all fields in the attributes table */
+.attributes_table th, .attributes_table td {
+    min-width: 150px; /* Adjust as needed */
+    padding: 10px;
+    border: 2px solid #ddd;
+    text-align: left;
+   }
+   
+   /* Optional: Style for the header cells */
+   .attributes_table th {
+    background-color: #f2f2f2;
+    color: #333;
+    font-weight: bold;
+   }
+      
+   .attributes_table tr:hover {
+    background-color: #f5f5f5;
+   }
+
+   .panel {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 20px;
+    margin-bottom: 20px;
+   }
+   
