@@ -1,7 +1,7 @@
 # app/admin/coupon.rb
 
 ActiveAdmin.register Coupon do
-    permit_params :code, :discount_percentage, :max_discount_amount, :active, 
+    permit_params :title, :code, :discount_percentage, :max_discount_amount, :active, 
                   :expiry_date, :no_of_uses, :description, :applicability,
                   :minimum_purchase_amount, :usage_restrictions, :user_limit,
                   :unique_per_user, :stackable
@@ -26,6 +26,7 @@ ActiveAdmin.register Coupon do
         f.input :active
         f.input :expiry_date
         f.input :no_of_uses
+        f.input :title
         f.input :description
         f.input :applicability
         f.input :minimum_purchase_amount
