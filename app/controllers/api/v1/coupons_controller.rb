@@ -6,7 +6,16 @@ module Api
         before_action :set_coupon, only: [:show, :apply, :remove]
       
         def index
-          @coupons = Coupon.all
+          @coupons = Coupon.all.map do |coupon|
+            {
+              id: coupon.id,
+              code: coupon.code,
+              discount_percentage: coupon.discount_percentage,
+              status: coupon_status(coupon),
+              created_at: coupon.created_at,
+              updated_at: coupon.updated_at
+            }
+          end
           render json: @coupons
         end
       
@@ -64,6 +73,16 @@ module Api
         
         def render_coupon_error(message)
           render json: { success: false, message: message }
+        end
+
+        def coupon_status(coupon)
+          user_coupon_count = UserCoupon.where(user_id: @current_user.id, coupon_id: coupon.id).count
+          return 'Expired' if expired_coupon?(coupon)
+          return 'Redeemed' if unique_coupon_used?(coupon, user_coupon_count)
+          return 'Redeemed' if global_usage_limit_reached?(coupon, user_coupon_count)
+          return 'Unused' if coupon.no_of_uses > 0 || user_coupon_count < coupon.user_limit
+  
+          'Coupon usage limit reached'
         end
         
     end
