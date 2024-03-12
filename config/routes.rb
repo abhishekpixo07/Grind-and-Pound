@@ -43,7 +43,9 @@ Rails.application.routes.draw do
         end
       end
       resources :shipping_addresses
-      resources :carts
+      resources :carts do
+        delete 'reset_cart', on: :collection
+      end
       resources :reviews, only: [:show, :create, :update, :destroy] do 
         collection do 
           post 'index', to: 'reviews#index'

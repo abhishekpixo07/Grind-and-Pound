@@ -49,6 +49,15 @@ module Api
         render json: { message: 'Cart Item cleared successfully.' }, status: :ok
       end
 
+      def reset_cart
+        if @current_user.cart.present? && @current_user.cart.cart_items.present?
+          @current_user.cart.cart_items.destroy_all 
+          render json: { message: 'Cart cleared successfully.' }, status: :ok
+        else
+          render json: { message: 'Cart items not found.' }, status: :ok
+        end
+      end
+     
       private
 
       def set_cart
