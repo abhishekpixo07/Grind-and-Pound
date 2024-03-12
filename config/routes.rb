@@ -28,6 +28,12 @@ Rails.application.routes.draw do
         post 'resend_otp', on: :collection
       end
       resources :orders
+
+      resources :orders, only: [] do
+        member do
+          get 'show_status'
+        end
+      end
       
       post '/create/payment', to: 'payments#create_payment'
       post '/capture/payment', to: 'payments#capture_payment'

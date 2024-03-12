@@ -3,7 +3,7 @@ module Api
         class OrdersController < ApplicationController
             before_action :authenticate_user_from_token!
             before_action :current_user
-            before_action :set_order, only: [:show, :update, :destroy]
+            before_action :set_order, only: [:show, :update, :destroy, :show_status]
 
             def show
                 render json: @order, include: [:user, :shipping_address, :payment]
@@ -54,6 +54,14 @@ module Api
             def destroy
                 @order.destroy
                 render json: { message: 'Order deleted successfully.' }
+            end
+
+            def show_status        
+                if @order
+                  render json: { status: @order.status, message: 'Order status retrieved successfully.' }
+                else
+                  render json: { status: 'No Orders Found', message: 'There are no orders in the system.' }, status: :not_found
+                end
             end
 
             private
