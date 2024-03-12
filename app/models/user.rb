@@ -12,6 +12,9 @@ class User < ApplicationRecord
     
     has_one_attached :attachment
 
+    has_many :user_coupons
+    has_many :coupons, through: :user_coupons
+
     has_many :subscriptions, dependent: :destroy
     has_many :plans, through: :subscriptions
 
