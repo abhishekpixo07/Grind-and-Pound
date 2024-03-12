@@ -11,12 +11,12 @@ module Api
         
 
             def index
-                @orders = @current_user.orders.includes(:user, :shipping_address, :payment)
+                @orders = @current_user.orders.includes(:user, :shipping_address, :payment).order(created_at: :desc)
                 render json: @orders
             end
         
             def create
-                if @cart_items.present?
+                if @current_user.cart.present? && @current_user.cart.cart_items.present?
                     @order = Order.new(order_params)
                     @order.user = @current_user
                     if @order.save
