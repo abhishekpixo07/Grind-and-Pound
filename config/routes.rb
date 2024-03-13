@@ -75,7 +75,7 @@ Rails.application.routes.draw do
       post '/refer_with_login', to: 'referrals#refer_with_login'
 
       resources :coupons, only: [:index, :show] do
-        member do
+        collection do
           post 'apply'
           delete 'remove'
         end

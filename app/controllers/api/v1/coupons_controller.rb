@@ -3,7 +3,7 @@ module Api
     class Api::V1::CouponsController < ApplicationController
         before_action :authenticate_user_from_token!
         before_action :current_user
-        before_action :set_coupon, only: [:show, :apply, :remove]
+        before_action :set_coupon, only: [:show, :remove]
       
         def index
           @coupons = Coupon.all.map do |coupon|
