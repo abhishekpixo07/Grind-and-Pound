@@ -5,7 +5,14 @@ ActiveAdmin.register User do
   filter :email
   filter :phone_number
   filter :active
- 
+
+  # In your Admin::UsersController
+  member_action :toggle_active, method: :put do
+    @user = User.find(params[:id])
+    @user.update(active: !@user.active)
+    redirect_to admin_users_path, notice: "User status updated successfully."
+  end
+
   index do
      selectable_column
      id_column
@@ -20,12 +27,14 @@ ActiveAdmin.register User do
      column :attachment do |user|
        image_tag url_for(user.attachment.present? ? user.attachment : ''), width:100, height:80, skip_pipeline: true
      end
-     actions defaults: false do |user|
+    actions defaults: false do |user|
       item raw('View&nbsp;&nbsp;'), admin_user_path(user), class: 'view_link'
-      item 'Delete', admin_user_path(user), class: 'view_link', method: :delete, data: { confirm: 'Are you sure?' }
-    end
-    
-      
+      if user.active
+        item 'Inactive', toggle_active_admin_user_path(user), method: :put, class: 'view_link make_inactive', data: { confirm: 'Are you sure?' }
+      else
+        item 'Active', toggle_active_admin_user_path(user), method: :put, class: 'view_link make_active', data: { confirm: 'Are you sure?' }
+      end
+    end   
   end
  
   show do
