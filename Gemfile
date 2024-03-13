@@ -53,6 +53,7 @@ gem 'rack-cors'
 gem 'bootstrap-datepicker-rails'
 gem 'cloudinary'
 gem 'carrierwave'
+gem 'activeadmin_quill_editor'
 gem 'razorpay', '~> 3.2.1'
 
 
