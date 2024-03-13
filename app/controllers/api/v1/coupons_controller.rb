@@ -29,28 +29,29 @@ module Api
           total_price = params[:total_price].to_f
           coupon_code = params[:coupon_code]      
           coupon = Coupon.find_by(code: coupon_code)
+          if coupon.present?
+            return render_coupon_error({ status: 'Expired', message: 'Sorry, the coupon has expired.' }) if expired_coupon?(coupon)
+            
+            user_coupon_count = UserCoupon.where(user_id: @current_user.id, coupon_id: coupon.id).count
+            return render_coupon_error({ status: 'Redeemed', message: 'This coupon can only be used once per user.' }) if unique_coupon_used?(coupon, user_coupon_count)
           
-          return render_coupon_error({ status: 'Expired', message: 'Sorry, the coupon has expired.' }) if expired_coupon?(coupon)
+            if global_usage_limit_reached?(coupon, user_coupon_count)
+              return render_coupon_error({ status: 'Redeemed', message: 'Coupon usage limit reached for this user.' })
+            end
           
-          user_coupon_count = UserCoupon.where(user_id: @current_user.id, coupon_id: coupon.id).count
-          return render_coupon_error({ status: 'Redeemed', message: 'This coupon can only be used once per user.' }) if unique_coupon_used?(coupon, user_coupon_count)
-        
-          if global_usage_limit_reached?(coupon, user_coupon_count)
-            return render_coupon_error({ status: 'Redeemed', message: 'Coupon usage limit reached for this user.' })
+            return render_coupon_error({ status: 'Unused', message: 'Coupon usage limit reached. No more uses available.' }) if coupon.no_of_uses <= 0
+          
+            coupon.update(no_of_uses: coupon.no_of_uses - 1)
+            UserCoupon.create!(user_id: @current_user.id, coupon_id: coupon.id)
+            discount_amount = (coupon.discount_percentage / 100) * total_price
+            discounted_price = total_price - discount_amount
+          
+            render json: { status: 'Unused', message: 'Congratulations! The coupon was applied successfully.', success: true, discounted_price: discounted_price, discount_amount: discount_amount, discount_percentage: coupon.discount_percentage }
+          else
+            render json: { error: 'coupon not found.' }, status: :unprocessable_entity if !coupon.present?
           end
-        
-          return render_coupon_error({ status: 'Unused', message: 'Coupon usage limit reached. No more uses available.' }) if coupon.no_of_uses <= 0
-        
-          coupon.update(no_of_uses: coupon.no_of_uses - 1)
-          UserCoupon.create!(user_id: @current_user.id, coupon_id: coupon.id)
-          discount_amount = (coupon.discount_percentage / 100) * total_price
-          discounted_price = total_price - discount_amount
-        
-          render json: { status: 'Unused', message: 'Congratulations! The coupon was applied successfully.', success: true, discounted_price: discounted_price, discount_amount: discount_amount, discount_percentage: coupon.discount_percentage }
         end           
-        
-        private
-        
+                
         def remove
           render json: { message: "Coupon removed successfully" }
         end
@@ -58,7 +59,8 @@ module Api
         private
       
         def set_coupon
-          @coupon = Coupon.find(params[:id])
+          @coupon = Coupon.find_by_id(params[:id])
+          render json: { error: 'coupon not found.' }, status: :unprocessable_entity if !@coupon.present?
         end
 
         def expired_coupon?(coupon)
