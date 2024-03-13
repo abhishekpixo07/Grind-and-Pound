@@ -10,8 +10,8 @@ module Api
             {
               id: coupon.id,
               code: coupon.code,
-              title: coupon.title
-              description: coupon.description
+              title: coupon.title,
+              description: coupon.description,
               discount_percentage: coupon.discount_percentage,
               status: coupon_status(coupon),
               created_at: coupon.created_at,
