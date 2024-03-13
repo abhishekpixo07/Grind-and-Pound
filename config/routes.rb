@@ -5,6 +5,14 @@ Rails.application.routes.draw do
   devise_for :admin_users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)
 
+  namespace :admin do
+    resources :users do
+      member do
+        put 'toggle_active'
+      end
+    end
+  end
+
   authenticate :admin_user do
     delete 'admin/logout', to: 'admin/admin_users#custom_logout', as: 'admin_logout'
   end
