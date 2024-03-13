@@ -13,24 +13,27 @@ module OtpAuthenticable
     ActiveRecord::Base.transaction do
       @user = existing_user ? send_otp_and_set_user(existing_user) : create_and_send_otp
     end
-  
-    render_response
-  rescue ActiveRecord::RecordInvalid => e
+    rescue ActiveRecord::RecordInvalid => e
     render json: { errors: format_validation_errors(e.record) }, status: :unprocessable_entity
   end
   
   def send_otp_and_set_user(user)
-    user.update!(otp: generate_random_otp)
-    @user_token = create_session(user)
-    # send_otp_via_twilio(user) if user.phone_number.present?
-    user
+    if user.active
+      user.update!(otp: generate_random_otp)
+      @user_token = create_session(user)
+      # send_otp_via_twilio(user) if user.phone_number.present?
+      render_response
+    else
+      render json: { message: 'User is inactive. Please contact support.' }, status: :ok
+    end
   end
-  
+    
   def create_and_send_otp
     @user = build_user(user_params)
     @user.otp = generate_random_otp
     @user.save!
     @user_token = create_session(@user)
+    render_response
     # send_otp_via_twilio(user) if @user.phone_number.present?
     @user
   end
