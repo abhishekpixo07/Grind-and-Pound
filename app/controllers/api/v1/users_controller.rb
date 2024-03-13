@@ -29,11 +29,15 @@ module Api
 
       def account
         handle_attachment(@user) if params[:user][:attachment].present?
-        if @user.update(user_params.except(:attachment))
-          @user_token = create_session(@user)
-          render json: { message: 'User created successfully.', user: ActiveModel::SerializableResource.new(@user, serializer: Api::V1::UserSerializer), authorization: @user_token&.token }, status: :ok
+        if User.exists?(email: user_params[:email])
+          render json: { errors: ["Email is already taken"] }, status: :unprocessable_entity
+        else
+          if @user.update(user_params.except(:attachment))
+            @user_token = create_session(@user)
+            render json: { message: 'User created successfully.', user: ActiveModel::SerializableResource.new(@user, serializer: Api::V1::UserSerializer), authorization: @user_token&.token }, status: :ok
           else
-          render json: { errors: @user.errors.full_messages }, status: :unprocessable_entity
+            render json: { errors: @user.errors.full_messages }, status: :unprocessable_entity
+          end
         end
       end
 
@@ -56,11 +60,14 @@ module Api
  
       def update
         handle_attachment(@current_user) if params[:user][:attachment].present?
-      
-        if @current_user.update(user_params.except(:attachment))
-          render json: @current_user, serializer: Api::V1::UserSerializer, status: :ok
+        if User.exists?(email: user_params[:email]) && user_params[:email] != @current_user.email
+          render json: { errors: ["Email is already taken"] }, status: :unprocessable_entity
         else
-          render json: { errors: @current_user.errors.full_messages }, status: :unprocessable_entity
+          if @current_user.update(user_params.except(:attachment))
+            render json: @current_user, serializer: Api::V1::UserSerializer, status: :ok
+          else
+            render json: { errors: @current_user.errors.full_messages }, status: :unprocessable_entity
+          end
         end
       end
 

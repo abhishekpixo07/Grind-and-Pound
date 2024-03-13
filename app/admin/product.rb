@@ -49,7 +49,7 @@ ActiveAdmin.register Product do
       f.inputs 'Product Details' do
         f.input :subcategory
         f.input :name
-        f.input :description
+        f.input :description, as: :quill_editor
         f.input :net_wt
         f.input :unit, :as => :select, :collection => ["g","kg"]
         f.input :available_on, as: :datetime_picker
@@ -96,7 +96,9 @@ ActiveAdmin.register Product do
     show do
       attributes_table do
         row :name
-        row :description
+        row :description do |pro|
+          raw pro.description.to_s
+        end
         row :available_on
         row 'Net wt' do |pro|
           pro.unit.present? ? pro.net_wt + pro.unit : ""

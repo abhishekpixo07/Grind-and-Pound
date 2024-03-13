@@ -23,6 +23,12 @@ class Product < ApplicationRecord
   has_many :product_properties
   accepts_nested_attributes_for :product_properties, allow_destroy: true
 
+  # Nested attributes
+  accepts_nested_attributes_for :product_images, allow_destroy: true
+  accepts_nested_attributes_for :variants, allow_destroy: true
+  accepts_nested_attributes_for :textures, allow_destroy: true
+  accepts_nested_attributes_for :product_properties, allow_destroy: true
+
   has_many :reviews
   
   def available_for_zip_code?(zip_code)

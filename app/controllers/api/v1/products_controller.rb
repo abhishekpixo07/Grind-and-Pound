@@ -54,20 +54,26 @@ module Api
             end
 
             def filter_products
-                return Product.all unless filter_criteria_present?
-                products = Product.all
-                products = products.where('name ILIKE ?', "%#{params[:keyword]}%") if params[:keyword].present?
-                if params[:subcategory_id].present?
-                  subcategory = Subcategory.find_by(id: params[:subcategory_id])
-                  products = subcategory ? products.filter_by_subcategory(subcategory.id) : Product.none
-                end
-                if params[:min_price].present? && params[:max_price].present?
-                  products = products.filter_by_price_range(params[:min_price].to_f, params[:max_price].to_f)
-                end
-                products = products.filter_by_net_wt_and_unit(params[:net_wt_unit]) if params[:net_wt_unit].present?
-                products
+              return Product.joins(:variants, :product_images, :textures, :product_properties).order(created_at: :desc).distinct unless filter_criteria_present?
+              
+              products = Product.joins(:variants, :product_images, :textures, :product_properties).order(created_at: :desc).distinct
+              
+              products = products.where('products.name ILIKE ?', "%#{params[:keyword]}%") if params[:keyword].present?
+              
+              if params[:subcategory_id].present?
+                subcategory = Subcategory.find_by(id: params[:subcategory_id])
+                products = subcategory ? products.filter_by_subcategory(subcategory.id) : Product.none
               end
               
+              if params[:min_price].present? && params[:max_price].present?
+                products = products.filter_by_price_range(params[:min_price].to_f, params[:max_price].to_f)
+              end
+              
+              products = products.filter_by_net_wt_and_unit(params[:net_wt_unit]) if params[:net_wt_unit].present?
+            
+              products.reject { |product| product.variants.empty? && product.product_images.empty? && product.textures.empty? && product.product_properties.empty? }
+            end
+                          
               
             def filter_criteria_present?
                 params[:keyword].present? || params[:subcategory_id].present? || (params[:min_price].present? && params[:max_price].present?) || params[:net_wt_unit].present?
