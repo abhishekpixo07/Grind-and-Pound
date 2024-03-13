@@ -1,7 +1,7 @@
 class Order < ApplicationRecord
     belongs_to :user
     belongs_to :shipping_address
-    has_one :payment
+    has_one :payment, dependent: :destroy
     has_many :order_items, dependent: :destroy
 
     accepts_nested_attributes_for :order_items

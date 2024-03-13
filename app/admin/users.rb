@@ -21,8 +21,11 @@ ActiveAdmin.register User do
        image_tag url_for(user.attachment.present? ? user.attachment : ''), width:100, height:80, skip_pipeline: true
      end
      actions defaults: false do |user|
-       link_to 'View', admin_user_path(user), class: 'view_link'
-     end
+      item raw('View&nbsp;&nbsp;'), admin_user_path(user), class: 'view_link'
+      item 'Delete', admin_user_path(user), class: 'view_link', method: :delete, data: { confirm: 'Are you sure?' }
+    end
+    
+      
   end
  
   show do

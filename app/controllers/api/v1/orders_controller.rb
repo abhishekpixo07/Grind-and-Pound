@@ -20,20 +20,9 @@ module Api
                     @order = Order.new(order_params)
                     @order.user = @current_user
                     if @order.save
+                        set_delivery_date
+                        process_order_items
                         @order.update(status: "Placed")  if @order.present?
-                        @cart_items = @current_user.cart.cart_items if @current_user.cart.present?
-                    
-                            @cart_items.each do |cart_item|
-                            product = cart_item.product
-                            quantity = cart_item.quantity
-                    
-                            @order.order_items.create(
-                                product: product,
-                                quantity: quantity,
-                                unit_price: product.master_price, # Adjust as needed
-                                total_price: quantity * product.master_price
-                            )
-                            end
                         render json: @order, status: :created, include: [:user, :shipping_address, :payment]
                     else
                         render json: @order.errors, status: :unprocessable_entity
@@ -73,6 +62,26 @@ module Api
 
             def order_params
                 params.require(:order).permit(:shipping_address_id, :sub_total, :discount_amount, :grand_total, :shipping_fee, :total_amount, :status, :payment_method, :delivery_method, :notes)
+            end
+            
+            def set_delivery_date
+                @order.delivery_date = @order.created_at.hour < 12 ? @order.created_at.end_of_day : (@order.created_at + 1.day).end_of_day
+            end       
+
+            def process_order_items
+                @cart_items = @current_user.cart.cart_items if @current_user.cart.present?
+            
+                @cart_items.each do |cart_item|
+                  product = cart_item.product
+                  quantity = cart_item.quantity
+            
+                  @order.order_items.create(
+                    product: product,
+                    quantity: quantity,
+                    unit_price: product.master_price, # Adjust as needed
+                    total_price: quantity * product.master_price
+                  )
+                end
             end
         end
     end
