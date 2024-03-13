@@ -52,8 +52,8 @@ ActiveAdmin.register Product do
         f.input :description
         f.input :net_wt
         f.input :unit, :as => :select, :collection => ["g","kg"]
-        f.input :available_on, as: :string, input_html: { class: 'datepicker' }
-        f.input :discontinue_on, as: :string, input_html: { class: 'datepicker' }
+        f.input :available_on, as: :datetime_picker
+        f.input :discontinue_on, as: :datetime_picker
         f.input :master_price
         f.input :cost_price
         f.inputs 'Available Zip Codes' do

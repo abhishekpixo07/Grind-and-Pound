@@ -24,7 +24,7 @@ ActiveAdmin.register Coupon do
         f.input :discount_percentage
         f.input :max_discount_amount
         f.input :active
-        f.input :expiry_date
+        f.input :expiry_date, as: :datetime_picker  # Use datepicker input method
         f.input :no_of_uses
         f.input :title
         f.input :description
