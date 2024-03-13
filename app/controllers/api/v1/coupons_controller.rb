@@ -46,7 +46,7 @@ module Api
           discount_amount = (coupon.discount_percentage / 100) * total_price
           discounted_price = total_price - discount_amount
         
-          render json: { status: 'Unused', message: 'Congratulations! The coupon was applied successfully.', success: true, discounted_price: discounted_price, discount_amount: discount_amount }
+          render json: { status: 'Unused', message: 'Congratulations! The coupon was applied successfully.', success: true, discounted_price: discounted_price, discount_amount: discount_amount, discount_percentage: coupon.discount_percentage }
         end           
         
         private
