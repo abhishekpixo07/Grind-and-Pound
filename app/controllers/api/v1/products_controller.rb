@@ -28,7 +28,7 @@ module Api
             def check_availability
                 zip_code = params[:zip_code].to_s            
                 if @product && @product.available_for_zip_code?(zip_code)
-                  render json: { available: true, product: @product }, status: :ok
+                  render json: { available: true, message: "Delivery Available", product: @product}, status: :ok
                 else
                   render json: { available: false }, status: :not_found
                 end

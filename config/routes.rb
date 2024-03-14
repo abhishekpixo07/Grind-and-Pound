@@ -67,7 +67,12 @@ Rails.application.routes.draw do
       end
 
       resources :vouchers, only: [:index, :show]
-      resources :our_stories, only: [:index, :show]
+      resources :our_stories, only: [:index, :show] do
+        collection do
+          get 'about_us', to: 'our_stories#about_us',as: "/about/us"
+        end
+      end
+      resources :stores, only: [:index]
       resources :blogs, only: [:index, :show]
       resources :faqs, only: [:index]
       

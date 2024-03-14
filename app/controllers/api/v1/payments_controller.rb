@@ -16,7 +16,7 @@ module Api
                     receipt: SecureRandom.hex(10),
                     payment_capture: 1,
                 )
-                order.update!(razorpay_order_id: razorpay.id)
+                order.update!(razorpay_order_id: razorpay.id,paid_at: Time.now)
                 payment = Payment.create(
                 user_id: current_user.id, # Assuming you have authentication and current_user method
                 order_id: order.id,
@@ -38,6 +38,8 @@ module Api
       
             if razorpay_payment.status == 'captured'
               order.payment.update(payment_status: 'success', razorpay_payment_id: razorpay_payment_id)
+              order.user = @current_user
+              order.update(status: "Placed")  if order.present?
               @current_user.cart.destroy if @current_user.cart.present?
               render json: { success: true, message: 'Payment captured successfully' }
             else
