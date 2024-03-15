@@ -26,10 +26,8 @@ module Api
                 @shipping_address = ShippingAddress.find_by_id(params[:shipping_address_id])
                 copy_shipping_address_details(@order, @shipping_address) if @shipping_address.present?
               
-                if params[:delivery_method] == "pickup"
-                    @store = Store.first
-                    copy_store_address_details(@order, @store) if @store.present?
-                end
+                @store = Store.find_by_id(params[:store_id])
+                copy_store_address_details(@order, @store) if @store.present?
 
                 if @order.save
                   set_delivery_date
@@ -60,6 +58,10 @@ module Api
                 else
                   render json: { status: 'No Orders Found', message: 'There are no orders in the system.' }, status: :not_found
                 end
+            end
+
+            def product_pincode
+                
             end
 
             private
