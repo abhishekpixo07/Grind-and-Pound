@@ -55,6 +55,9 @@ gem 'cloudinary'
 gem 'carrierwave'
 gem 'activeadmin_quill_editor'
 gem 'razorpay', '~> 3.2.1'
+gem 'prawn'
+gem 'prawn-table'
+
 
 
 
