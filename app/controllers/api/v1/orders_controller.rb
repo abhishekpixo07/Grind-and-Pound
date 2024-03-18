@@ -52,7 +52,8 @@ module Api
                 render json: { message: 'Order deleted successfully.' }
             end
 
-            def show_status        
+            def show_status 
+                @order = @current_user.orders.find_by(id: params[:id])       
                 if @order
                   render json: { status: @order.status, message: 'Order status retrieved successfully.' }
                 else
