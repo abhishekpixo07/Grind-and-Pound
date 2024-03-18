@@ -66,6 +66,7 @@ Rails.application.routes.draw do
           post 'index', to: 'reviews#index'
         end
       end
+      resources :invoices, only: [:show]
 
       resources :vouchers, only: [:index, :show]
       resources :our_stories, only: [:index, :show] do
