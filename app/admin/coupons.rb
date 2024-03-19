@@ -27,7 +27,7 @@ ActiveAdmin.register Coupon do
         f.input :expiry_date, as: :datetime_picker  # Use datepicker input method
         f.input :no_of_uses
         f.input :title
-        f.input :description
+        f.input :description, as: :quill_editor
         f.input :applicability
         f.input :minimum_purchase_amount
         f.input :usage_restrictions

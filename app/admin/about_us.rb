@@ -12,7 +12,7 @@ ActiveAdmin.register AboutUs do
   form do |f|
     f.inputs "About Us Details" do
       f.input :title
-      f.input :content, as: :text
+      f.input :content, as: :quill_editor
       f.input :image_url
       f.input :published_at, as: :datepicker
     end

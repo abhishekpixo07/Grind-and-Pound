@@ -16,7 +16,7 @@ ActiveAdmin.register OurStory do
     form do |f|
       f.inputs 'Voucher Details' do
         f.input :title
-        f.input :description, as: :text
+        f.input :description, as: :quill_editor
         f.input :image, as: :file
     end
       f.actions

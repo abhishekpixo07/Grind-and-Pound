@@ -16,7 +16,7 @@ ActiveAdmin.register Plan do
       f.input :name
       f.input :price
       f.input :interval, as: :select, collection: Plan.intervals.keys
-      f.input :features, as: :text
+      f.input :features, as: :quill_editor
     end
     f.actions
   end

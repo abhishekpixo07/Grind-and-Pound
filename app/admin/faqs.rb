@@ -21,7 +21,7 @@ ActiveAdmin.register Faq do
     f.inputs 'FAQ Details' do
       f.input :faq_category
       f.input :question
-      f.input :answer, as: :text
+      f.input :answer, as: :quill_editor
     end
     f.actions
   end
