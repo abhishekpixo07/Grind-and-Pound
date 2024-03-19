@@ -55,14 +55,10 @@ module Api
             def show_status 
                 @order = @current_user.orders.find_by(id: params[:id])       
                 if @order
-                  render json: { status: @order.status, message: 'Order status retrieved successfully.' }
+                  render json: { status: @order.status, order: OrderSerializer.new(@order), message: 'Order status retrieved successfully.' }
                 else
                   render json: { status: 'No Orders Found', message: 'There are no orders in the system.' }, status: :not_found
                 end
-            end
-
-            def product_pincode
-                
             end
 
             private

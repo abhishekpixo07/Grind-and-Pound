@@ -43,21 +43,25 @@ module Api
             end
 
             def available_zip_codes
-              if params[:pin_code].present?
-                pin_code = params[:pin_code]
-                @available_products = Product.where(":pin_code = ANY (available_zip_codes)", pin_code: pin_code)
-                render json: {
-                  data: 'Product list for the specified pin code.',
-                  products: ActiveModelSerializers::SerializableResource.new(@available_products, each_serializer: ProductSerializer)
-                }, status: :ok
+              @zip_codes = Product.pluck(:available_zip_codes).flatten.uniq
+              pin_code = params[:pin_code]
+              @available_products = Product.where(":pin_code = ANY (available_zip_codes)", pin_code: pin_code)
+             
+              if @available_products.any?
+                 render json: {
+                   zip_codes: @zip_codes,
+                   message: 'Delivery available!',
+                   status: true
+                 }, status: :ok
               else
-                @zip_codes = Product.pluck(:available_zip_codes).flatten.uniq
-                render json: {
-                  data: 'Unique pin codes for available products.',
-                  pin_codes: @zip_codes
-                }, status: :ok
+                 render json: {
+                   zip_codes: @zip_codes,
+                   message: 'We apologize, but we do not offer service in your area!',
+                   status: true
+                 }, status: :ok
               end
             end
+             
 
             private
         
