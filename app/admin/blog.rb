@@ -20,7 +20,7 @@ ActiveAdmin.register Blog do
       f.inputs 'Voucher Details' do
         f.input :blog_category
         f.input :title
-        f.input :description, as: :text
+        f.input :description, as: :quill_editor
         f.input :image, as: :file
     end
       f.actions

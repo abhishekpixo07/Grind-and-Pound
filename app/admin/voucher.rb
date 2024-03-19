@@ -18,7 +18,7 @@ ActiveAdmin.register Voucher do
     form do |f|
       f.inputs 'Voucher Details' do
         f.input :title
-        f.input :description, as: :text
+        f.input :description, as: :quill_editor
         f.input :expiry_date
         f.input :code
       end
