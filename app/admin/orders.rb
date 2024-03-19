@@ -54,12 +54,29 @@ ActiveAdmin.register Order do
       row :paid_at
       row :rozarpay_order_id
       row :shipped_at
+      row :address_line_1
+      row :address_line_2
+      row :city
+      row :state
+      row :postal_code
+      row :country 
       row :delivery_date
       row :notes
       row :gift_wrap
       row :tracking_number
       # Add more attributes as needed
 
+      panel 'Order Items' do
+        table_for order.order_items do
+          column 'Product' do |order_item|
+            order_item.product.name
+          end
+          column :quantity
+          column :unit_price
+          column :total_price
+        end
+      end
+      
       panel "Payment Information" do
         attributes_table_for resource.payment do
           row :razorpay_payment_id
@@ -73,17 +90,6 @@ ActiveAdmin.register Order do
           row :created_at
         end
       end if resource.payment.present?
-
-      panel "Shipping Address" do
-        attributes_table_for resource.shipping_address do
-          row :address_line_1
-          row :address_line_2
-          row :city
-          row :state
-          row :postal_code
-          row :country
-        end
-      end if resource.shipping_address.present?
 
       panel "User Details" do
         attributes_table_for resource.user do
