@@ -57,7 +57,7 @@ module Api
                  render json: {
                    zip_codes: @zip_codes,
                    message: 'We apologize, but we do not offer service in your area!',
-                   status: true
+                   status: false
                  }, status: :ok
               end
             end
