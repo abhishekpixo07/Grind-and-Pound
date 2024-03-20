@@ -77,7 +77,10 @@ Rails.application.routes.draw do
       resources :stores, only: [:index]
       resources :blogs, only: [:index, :show]
       resources :faqs, only: [:index]
-      
+      resources :privacy_policies, only: [:index]
+      resources :terms_of_sales, only: [:index]
+      resources :terms_of_uses, only: [:index]
+
       post '/refer_without_login', to: 'referrals#refer_without_login'
       post '/refer_with_login', to: 'referrals#refer_with_login'
 
