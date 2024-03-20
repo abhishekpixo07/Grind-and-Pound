@@ -5,7 +5,7 @@ ActiveAdmin.register Order do
 
   filter :id
   filter :user
-  filter :status
+  filter :status, as: :select, collection: proc { Order.statuses }
   filter :payment_method
   
 
@@ -14,7 +14,21 @@ ActiveAdmin.register Order do
     id_column
     column :user
     column :total_amount
-    column :status
+    column :status do |resource|
+      status_color = case resource.status
+                      when 'Pending'
+                        'orange'
+                      when 'Processing'
+                        'blue'
+                      when 'Shipped'
+                        'green'
+                      when 'Delivered'
+                        'purple'
+                      else
+                        'black'
+                      end
+        content_tag(:span, resource.status, style: "color: #{status_color}; font-weight: bold; text-decoration: underline;", class: "status-tag")
+    end 
     actions
   end
 

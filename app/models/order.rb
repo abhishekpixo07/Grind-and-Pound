@@ -11,8 +11,17 @@ class Order < ApplicationRecord
     def self.ransackable_attributes(auth_object = nil)
         ["created_at", "gift_wrap", "id", "notes", "paid_at", "payment_method", "shipped_at", "shipping_address_id", "status", "total_amount", "tracking_number", "updated_at", "user_id","sub_total", "discount_amount", "shipping_fee","grand_total","delivery_method","razorpay_order_id"]
     end
+    
     def self.ransackable_associations(auth_object = nil)
         ["payment", "shipping_address", "user","order_items"]
+    end
+
+    # Define the possible statuses
+    STATUSES = %w[Pending Processing Shipped Delivered Cancelled Returned Refunded Out for Delivery Failed Delivery Awaiting Payment Payment Failed].freeze
+
+    # Class method to return the possible statuses
+    def self.statuses
+        STATUSES
     end
 
     before_update :order_status_changed, if: :status_changed?
