@@ -43,24 +43,26 @@ module Api
             end
 
             def available_zip_codes
-              @zip_codes = Product.pluck(:available_zip_codes).flatten.uniq
+              zip_codes = Product.pluck(:available_zip_codes).flatten.uniq
+              formatted_zip_codes = zip_codes.flat_map { |codes| codes.split(",") }.uniq
+              
               pin_code = params[:pin_code]
-              @available_products = Product.where(":pin_code = ANY (available_zip_codes)", pin_code: pin_code)
-             
-              if @available_products.any?
-                 render json: {
-                   zip_codes: @zip_codes,
-                   message: 'Delivery available!',
-                   status: true
-                 }, status: :ok
+              available_products = Product.where(":pin_code = ANY (available_zip_codes)", pin_code: pin_code)
+              
+              if available_products.any?
+                render json: {
+                  zip_codes: formatted_zip_codes,
+                  message: 'Delivery available!',
+                  status: true
+                }, status: :ok
               else
-                 render json: {
-                   zip_codes: @zip_codes,
-                   message: 'We apologize, but we do not offer service in your area!',
-                   status: false
-                 }, status: :ok
+                render json: {
+                  zip_codes: formatted_zip_codes,
+                  message: 'We apologize, but we do not offer service in your area!',
+                  status: false
+                }, status: :ok
               end
-            end
+            end            
              
 
             private
