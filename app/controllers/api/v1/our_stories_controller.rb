@@ -14,7 +14,7 @@ module Api
       end
 
       def about_us
-        @about_us = AboutUs.all
+        @about_us = AboutUs.all.order(created_at: :desc)
         render json: { status: 'Success', message: 'About us', data: @about_us }, status: :ok
       end
 
