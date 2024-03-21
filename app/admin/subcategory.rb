@@ -5,6 +5,10 @@ ActiveAdmin.register Subcategory do
     action_item :add_product, only: :show do
       link_to 'Add Product', new_admin_product_path
     end
+
+    filter :name
+    filter :category, as: :select, collection: -> { Category.pluck(:name, :id) }
+
   
     index do
       selectable_column

@@ -3,8 +3,10 @@
 ActiveAdmin.register Banner do
     permit_params :banner_type, :title, :text_color, :attachment
       
-    filter :attachment, as: :file
-  
+     #filters              
+     filter :title    
+     filter :banner_type
+    
     index do
         selectable_column
         id_column

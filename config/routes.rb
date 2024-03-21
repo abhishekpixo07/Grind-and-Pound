@@ -55,6 +55,7 @@ Rails.application.routes.draw do
           post '/check_availability', to: 'products#check_availability'
           get 'check/stock/:id', to: 'products#check_stock',as: :check_stock
           post :available_zip_codes
+          post :search
         end
       end
       resources :shipping_addresses

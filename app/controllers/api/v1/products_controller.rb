@@ -13,6 +13,17 @@ module Api
                 @categories = Category.all
                 render json: { data: 'products list.', products: ActiveModelSerializers::SerializableResource.new(@products, each_serializer: ProductSerializer), subcategories: @subcategories.as_json(only: [:id, :name]), categories: @categories.as_json(only: [:id, :name]) }, status: :ok
             end  
+
+            def search
+              @products = []
+              if params[:name].present?
+                @products = Product.where("name ILIKE ?", "%#{params[:name]}%").order(created_at: :desc)
+              end
+              render json: {
+                  data: 'products list.',
+                  product: ActiveModelSerializers::SerializableResource.new(@products, each_serializer: ProductSerializer),
+                }, status: :ok
+            end
         
             def show
                 products_in_same_subcategory = Product.where(subcategory_id: @product.subcategory_id).where.not(id: @product.id)

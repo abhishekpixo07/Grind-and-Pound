@@ -15,4 +15,8 @@ class Subscription < ApplicationRecord
   def self.ransackable_attributes(auth_object = nil)
     ["created_at", "expires_at", "id", "plan_id", "status", "updated_at", "user_id"]
   end
+
+  def self.ransackable_associations(auth_object = nil)
+    ["plan", "user"]
+  end
 end

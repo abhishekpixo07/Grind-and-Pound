@@ -5,6 +5,14 @@ ActiveAdmin.register Coupon do
                   :expiry_date, :no_of_uses, :description, :applicability,
                   :minimum_purchase_amount, :usage_restrictions, :user_limit,
                   :unique_per_user, :stackable
+
+    #filters              
+    filter :active    
+    filter :title
+    filter :coupon_code
+    filter :expiry_date
+    filter :discount_percentage
+    filter :unique_per_user
   
     index do
       selectable_column
@@ -24,7 +32,7 @@ ActiveAdmin.register Coupon do
         f.input :discount_percentage
         f.input :max_discount_amount
         f.input :active
-        f.input :expiry_date, as: :datetime_picker  # Use datepicker input method
+        f.input :expiry_date, as: :datepicker  # Use datepicker input method
         f.input :no_of_uses
         f.input :title
         f.input :description, as: :quill_editor
