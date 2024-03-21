@@ -3,6 +3,9 @@ ActiveAdmin.register Category do
   menu parent: 'Category', label: 'Category', priority: 1
   permit_params :name, :image, :description
 
+  filter :name
+  filter :subcategories, as: :select, collection: -> { Subcategory.pluck(:name, :id) }
+
   index do
     selectable_column
     id_column

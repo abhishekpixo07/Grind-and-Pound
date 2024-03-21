@@ -4,7 +4,10 @@ ActiveAdmin.register Blog do
   menu parent: 'Blog', label: 'Blogs', priority: 2
 
     permit_params :title, :description, :image, :blog_category_id
-  
+
+    filter :blog_category, as: :select, collection: -> { BlogCategory.pluck(:title, :id) }
+    filter :title    
+
     index do
       selectable_column
       id_column

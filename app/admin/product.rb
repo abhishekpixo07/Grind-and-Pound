@@ -12,7 +12,6 @@ ActiveAdmin.register Product do
     filter :discontinue_on
     filter :master_price
     filter :subcategory
-    filter :attachment, as: :file
     
 
     index do

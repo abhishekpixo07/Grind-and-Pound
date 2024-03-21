@@ -32,16 +32,24 @@ module Api
       def capture_payment
         order = Order.find(params[:order_id])
         razorpay_payment_id = params[:razorpay_payment_id]
-
+      
         razorpay_payment = Razorpay::Payment.fetch(razorpay_payment_id)
-  
+      
         if razorpay_payment.status == 'captured'
           order.payment.update(payment_status: 'success', razorpay_payment_id: razorpay_payment_id)
           order.user = @current_user
-          order.update(status: "Placed")  if order.present?
+          order.update(status: "Placed") if order.present?
+          
+          # Create UserCoupon after successful payment capture
+          TempUserCoupon.where(user_id: @current_user.id).each do |temp_coupon|
+            UserCoupon.create!(user_id: temp_coupon.user_id, coupon_id: temp_coupon.coupon_id)
+          end
+          TempUserCoupon.where(user_id: @current_user.id).destroy_all
+          
           # Create invoice
           create_invoice(order) # Call create_invoice method defined within the same class
           @current_user.cart.destroy if @current_user.cart.present?
+                    
           render json: { success: true, message: 'Payment captured successfully' }
         else
           render json: { success: false, message: 'Payment capture failed' }

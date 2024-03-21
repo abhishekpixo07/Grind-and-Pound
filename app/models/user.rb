@@ -13,6 +13,7 @@ class User < ApplicationRecord
     
     has_one_attached :attachment
 
+    has_many :temp_user_coupons, dependent: :destroy
     has_many :user_coupons, dependent: :destroy
     has_many :coupons, through: :user_coupons
 
@@ -31,6 +32,11 @@ class User < ApplicationRecord
     def self.ransackable_attributes(auth_object = nil)
         %w[active country_code created_at email id name otp phone_number profile_pic updated_at]
     end
+
+    def self.ransackable_associations(auth_object = nil)
+      ["attachment_attachment", "attachment_blob", "cart", "coupons", "invoices", "orders", "payments", "plans", "referrals", "referred_users", "reviews", "sessions", "shipping_addresses", "subscriptions", "temp_user_coupons", "user_coupons"]
+    end
+  
 
     private
 

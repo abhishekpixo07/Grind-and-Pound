@@ -5,6 +5,12 @@ ActiveAdmin.register Store do
    
     actions :all, except: :new
    
+    #filters              
+    filter :title    
+    filter :city
+    filter :state
+    filter :postal_code
+
     controller do
        def new
          if Store.count == 1

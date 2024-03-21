@@ -2,7 +2,8 @@
 
 ActiveAdmin.register OurStory do
     permit_params :title, :description, :image
-  
+    filter :title
+
     index do
       selectable_column
       id_column

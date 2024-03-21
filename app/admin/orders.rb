@@ -1,39 +1,44 @@
 # app/admin/order.rb
-
 ActiveAdmin.register Order do
   permit_params :status
-
+ 
   filter :id
   filter :user
   filter :status, as: :select, collection: proc { Order.statuses }
   filter :payment_method
-  
-
+ 
   index do
-    selectable_column
-    id_column
-    column :user
-    column :total_amount
-    column :status do |resource|
-      status_color = case resource.status
-                      when 'Pending'
-                        'orange'
-                      when 'Processing'
-                        'blue'
-                      when 'Shipped'
-                        'green'
-                      when 'Delivered'
-                        'purple'
-                      else
-                        'black'
-                      end
-        content_tag(:span, resource.status, style: "color: #{status_color}; font-weight: bold; text-decoration: underline;", class: "status-tag")
-    end 
-    actions
+     selectable_column
+     id_column
+     column :user
+     column :total_amount
+     column :status do |resource|
+       status_color = case resource.status
+                       when 'Pending'
+                         'orange'
+                       when 'Processing'
+                         'blue'
+                       when 'Shipped'
+                         'green'
+                       when 'Delivered'
+                         'purple'
+                       else
+                         'black'
+                       end
+       content_tag(:span, resource.status, style: "color: #{status_color}; font-weight: bold; text-decoration: underline;", class: "status-tag")
+     end 
+     actions
   end
-
+ 
+  # Filter out orders without a user_id in the index view
+  controller do
+     def scoped_collection
+       super.where.not(user_id: nil)
+     end
+  end
+ 
    # Edit view
-  form do |f|
+   form do |f|
     f.inputs "Order Details" do
       f.input :status, as: :select, collection: ['Placed', 'Processing', 'Shipped', 'Delivered', 'Cancelled', 'Returned', 'Refunded', 'Out for Delivery', 'Failed Delivery', 'Awaiting Payment', 'Payment Failed'], include_blank: false
     end
@@ -118,3 +123,4 @@ ActiveAdmin.register Order do
     end
   end
 end
+ 
