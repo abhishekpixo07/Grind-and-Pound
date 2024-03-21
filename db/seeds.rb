@@ -21,3 +21,7 @@ about_us_titles.uniq.each do |title|
   AboutUs.find_or_create_by(title: title)
 end
 
+#create_corresponding_faq_category
+Category.find_each do |category|
+    FaqCategory.find_or_create_by(title: category.name)
+end
