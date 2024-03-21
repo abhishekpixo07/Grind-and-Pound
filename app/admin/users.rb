@@ -80,6 +80,7 @@ ActiveAdmin.register User do
       panel "Orders (Total: #{user.orders.count})" do
         table_for(user.orders) do
           column :id
+          column :razorpay_order_id
           column :total_amount
           column :status
           column :payment_method
@@ -93,6 +94,7 @@ ActiveAdmin.register User do
             if order.payment
               panel "Payment Details" do
                 attributes_table_for order.payment do
+                  row :razorpay_payment_id
                   row :payment_status
                   row :payment_amount
                   row :created_at

@@ -1,7 +1,7 @@
 # app/serializers/product_serializer.rb
 
 class ProductSerializer < ActiveModel::Serializer
-  attributes :id, :name, :description, :available_on, :net_wt, :unit, :discontinue_on, :master_price, :cost_price, :subcategory_id, :attachment_url, :cart, :is_texture, :textures, :product_properties, :variants, :reviews, :overall_average_rating, :category,:subcategory
+  attributes :id, :name, :description, :available_on, :net_wt, :unit, :discontinue_on, :master_price, :cost_price, :subcategory_id, :attachment_url, :cart, :is_texture, :textures, :product_properties, :variants, :reviews, :overall_average_rating, :category,:subcategory, :faqs
 
   def attachment_url
     object.product_images.map do |pi|
@@ -94,6 +94,17 @@ class ProductSerializer < ActiveModel::Serializer
 
   def overall_average_rating
     object.reviews.average(:rating).to_f.round(0)
+  end
+
+  def faqs
+    Faq.joins(:faq_category).where(faq_categories: { title: object.subcategory.category.name }).map do |faq|
+      {
+        id: faq.id,
+        title: faq.question,
+        content: faq.answer,
+        category: faq.faq_category.title
+      }
+    end
   end
 
 end

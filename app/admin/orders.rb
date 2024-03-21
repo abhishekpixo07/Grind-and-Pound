@@ -10,7 +10,10 @@ ActiveAdmin.register Order do
   index do
      selectable_column
      id_column
-     column :user
+     column :User, sortable: 'users.first_name' do |order|
+      user_name = [order.user.title, order.user.first_name, order.user.last_name].compact.join(' ')
+      link_to user_name, admin_user_path(order.user)
+    end
      column :total_amount
      column :status do |resource|
        status_color = case resource.status
@@ -27,6 +30,13 @@ ActiveAdmin.register Order do
                        end
        content_tag(:span, resource.status, style: "color: #{status_color}; font-weight: bold; text-decoration: underline;", class: "status-tag")
      end 
+      column "Invoice" do |order|
+        if order.invoice.present?
+          link_to "Invoice", view_invoice_pdf_admin_order_path(order), target: "_blank"
+        else
+          "No invoice available"
+        end
+      end
      actions
   end
  
@@ -110,6 +120,14 @@ ActiveAdmin.register Order do
         end
       end if resource.payment.present?
 
+      panel "Invoice PDF" do
+        if resource.invoice.present?
+          link_to "View Invoice PDF", view_invoice_pdf_admin_order_path(order), target: "_blank"
+        else
+          "No invoice available"
+        end
+      end
+
       panel "User Details" do
         attributes_table_for resource.user do
           row :email
@@ -122,5 +140,20 @@ ActiveAdmin.register Order do
 
     end
   end
+
+  member_action :view_invoice_pdf do
+    @order = Order.find(params[:id])
+    if @order.invoice.present?
+       send_data @order.invoice.generate_pdf, # Removed .render here
+                 filename: "invoice_#{Time.zone.now.strftime('%Y%m%d%H%M%S')}.pdf",
+                 type: 'application/pdf',
+                 disposition: 'inline'
+    else
+       flash[:error] = 'No invoice found for this order.'
+       redirect_to admin_order_path(@order)
+    end
+   end
+   
+
 end
  
