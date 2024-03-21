@@ -37,8 +37,15 @@ module Api
       
         if razorpay_payment.status == 'captured'
           order.payment.update(payment_status: 'success', razorpay_payment_id: razorpay_payment_id)
-          order.user = @current_user
-          order.update(status: "Placed") if order.present?
+          order.update(user: @current_user, status: 'Placed')
+        
+          # Calculate delivery date based on payment capture time
+          delivery_date = if Time.now.hour < 12
+                            Date.today
+                          else
+                            Date.tomorrow
+                          end
+          order.update(delivery_date: delivery_date)
           
           # Create UserCoupon after successful payment capture
           TempUserCoupon.where(user_id: @current_user.id).each do |temp_coupon|

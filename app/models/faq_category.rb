@@ -1,6 +1,6 @@
 class FaqCategory < ApplicationRecord
     has_many :faqs
-    validates :title, presence: true, uniqueness: true
+    # validates :title, presence: true, uniqueness: true
 
     
     def self.ransackable_attributes(auth_object = nil)
