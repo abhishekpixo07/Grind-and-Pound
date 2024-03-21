@@ -7,7 +7,7 @@ module Api
       before_action :set_review, only: [:show, :update, :destroy]
 
       def index
-        @reviews = @product.reviews
+        @reviews = @product.reviews.order(created_at: :desc)
         render json: @reviews, each_serializer: Api::V1::ReviewSerializer, status: :ok
       end
 

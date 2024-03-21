@@ -7,7 +7,7 @@ module Api
         before_action :set_shipping_address, only: [:show, :update, :destroy]
       
         def index
-          @shipping_addresses = @current_user.shipping_addresses
+          @shipping_addresses = @current_user.shipping_addresses.order(created_at: :desc)
           @shipping_addresses.present? ? (render json: @shipping_addresses) : (render json: { error: 'shipping addresses not found.' }, status: :unprocessable_entity)
         end
       
