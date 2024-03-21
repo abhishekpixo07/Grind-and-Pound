@@ -32,14 +32,14 @@ module Api
           
           coupon = Coupon.find_by(code: coupon_code)
           if coupon.present?
-            temp_user_coupon_count = TempUserCouponUserCoupon.where(user_id: @current_user.id, coupon_id: coupon.id).count
+            temp_user_coupon_count = TempUserCoupon.where(user_id: @current_user.id, coupon_id: coupon.id).count
             return render_coupon_error({ status: 'Expired', message: 'Sorry, the coupon has expired.' }) if expired_coupon?(coupon)
             return render_coupon_error({ status: 'Redeemed', message: 'This coupon can only be used once per user.' }) if unique_coupon_used?(coupon, temp_user_coupon_count)
             if global_usage_limit_reached?(coupon, temp_user_coupon_count)
               return render_coupon_error({ status: 'Redeemed', message: 'Coupon usage limit reached for this user.' })
             end
             return render_coupon_error({ status: 'Unused', message: 'Coupon usage limit reached. No more uses available.' }) if coupon.no_of_uses <= 0
-            
+
             coupon_status = coupon_status(coupon)
             return render_coupon_error({ status: coupon_status, message: 'Sorry, the coupon cannot be applied.' }) if coupon_status != 'Unused'
             
