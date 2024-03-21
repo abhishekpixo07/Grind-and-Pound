@@ -57,6 +57,15 @@ ActiveAdmin.register Order do
 
   show do
     attributes_table do
+      if resource.invoice.present?
+        row "Invoice PDF" do
+          link_to "View Invoice PDF", view_invoice_pdf_admin_order_path(order), target: "_blank"
+        end
+      else
+        row "Invoice PDF" do
+          "No invoice available"
+        end
+      end
       row :status do |resource|
         status_color = case resource.status
                         when 'Pending'
@@ -119,14 +128,6 @@ ActiveAdmin.register Order do
           row :created_at
         end
       end if resource.payment.present?
-
-      panel "Invoice PDF" do
-        if resource.invoice.present?
-          link_to "View Invoice PDF", view_invoice_pdf_admin_order_path(order), target: "_blank"
-        else
-          "No invoice available"
-        end
-      end
 
       panel "User Details" do
         attributes_table_for resource.user do
