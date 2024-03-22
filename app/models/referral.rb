@@ -3,7 +3,7 @@ class Referral < ApplicationRecord
   belongs_to :referrer, class_name: 'User', optional: true
   belongs_to :referred_user, class_name: 'User', optional: true
 
-  validates :email, uniqueness: true
+  # validates :email, uniqueness: true
 
   before_validation :normalize_email
 

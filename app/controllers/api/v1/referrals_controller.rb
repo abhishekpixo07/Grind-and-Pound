@@ -2,26 +2,32 @@
 module Api
   module V1
     class ReferralsController < ApplicationController
-      before_action :authenticate_user_from_token!, only: [:refer_with_login]
+      before_action :authenticate_user_from_token!
       before_action :current_user
 
-      def refer_without_login
-        email = params[:email]
-
-        if email.present?
-          # Check if the email is valid
-          if email =~ URI::MailTo::EMAIL_REGEXP
-            ReferralMailer.refer_email(email).deliver_now
-            render json: { message: "Referral email sent to #{email}" }
+      def share_referral_code
+        referr = @current_user # Assuming you have a way to get the current user
+    
+        if referr.referral_key.present?
+          email = params[:email]
+    
+          if email.present?
+            # Check if the email is valid
+            if email =~ URI::MailTo::EMAIL_REGEXP
+              ReferralMailer.refer_email(email, referr.referral_key).deliver_now
+              render json: { message: "Referral email sent to #{email}" }
+            else
+              render json: { error: 'Invalid email format' }, status: :unprocessable_entity
+            end
           else
-            render json: { error: 'Invalid email format' }, status: :unprocessable_entity
+            render json: { error: 'Email is required' }, status: :unprocessable_entity
           end
         else
-          render json: { error: 'Email is required' }, status: :unprocessable_entity
+          render json: { error: 'Referrer does not have a referral code' }, status: :unprocessable_entity
         end
       end
 
-      def refer_with_login
+      def user_referral_code
         email = params[:email]
         referred_user = User.find_by(email: email)
       
@@ -43,7 +49,8 @@ module Api
       private
     
       def generate_referral_key
-        rand(1000..9999)
+        random_number = rand(1000..9999)
+        "GRIND#{random_number}"
       end
     end
   end
