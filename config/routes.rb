@@ -82,8 +82,8 @@ Rails.application.routes.draw do
       resources :terms_of_sales, only: [:index]
       resources :terms_of_uses, only: [:index]
 
-      post '/refer_without_login', to: 'referrals#refer_without_login'
-      post '/refer_with_login', to: 'referrals#refer_with_login'
+      post '/share_referral_code', to: 'referrals#share_referral_code'
+      post '/user_referral_code', to: 'referrals#user_referral_code'
 
       resources :coupons, only: [:index, :show] do
         collection do
