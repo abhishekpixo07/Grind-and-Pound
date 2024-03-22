@@ -4,7 +4,7 @@ class Plan < ApplicationRecord
     validates :price, numericality: { greater_than_or_equal_to:  0 }
     validates :billing_interval, presence: true
   
-    enum billing_interval: { daily: 'daily', weekly: 'weekly', monthly: 'monthly', yearly: 'yearly' }
+    enum billing_interval: { daily: 'daily', weekly: 'weekly', monthly: 'monthly', quaterly: 'quaterly' , yearly: 'yearly' }
 
     def self.ransackable_attributes(auth_object = nil)
         %w[name price interval]
