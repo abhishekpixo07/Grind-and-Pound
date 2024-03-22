@@ -17,12 +17,21 @@ class User < ApplicationRecord
     has_many :user_coupons, dependent: :destroy
     has_many :coupons, through: :user_coupons
 
-    has_many :subscriptions, dependent: :destroy
+    has_one :subscription, dependent: :destroy
     has_many :plans, through: :subscriptions
 
     has_many :referrals, foreign_key: 'referrer_id', dependent: :destroy
-    has_many :referred_users, through: :referrals, source: :referred_user
-  
+    has_many :referred_users, through: :referrals, source: :referred_user,dependent: :destroy
+
+    # Method to associate a referrer with a referred user
+    def refer(referral_key)
+      referrer = User.find_by(referral_key: referral_key)
+      if referrer.present?
+        self.referrals.create(referrer: referrer)
+      end
+    end
+
+
     before_validation :capitalize_names
 
     def active_subscriptions
