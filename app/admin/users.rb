@@ -107,24 +107,26 @@ ActiveAdmin.register User do
         end
       end    
   
-      panel "Subscriptions (Total: #{user.subscriptions.count})" do
-        table_for(user.subscriptions) do
-          column :id
-          column :status
-          column :expires_at
-          column :created_at
-          column "Plan" do |subscription|
-            if subscription.plan
-              panel "Plan Details" do
-                attributes_table_for subscription.plan do
-                  row :name
-                  row :price
-                  row :billing_interval
-                  row :features
+      panel "Subscription (Total: #{user.subscription})" do
+        if user.subscription
+          table_for(user.subscription) do
+            column :id
+            column :status
+            column :expires_at
+            column :created_at
+            column "Plan" do |subscription|
+              if subscription.plan
+                panel "Plan Details" do
+                  attributes_table_for subscription.plan do
+                    row :name
+                    row :price
+                    row :billing_interval
+                    row :features
+                  end
                 end
+              else
+                "No plan details available"
               end
-            else
-              "No plan details available"
             end
           end
         end
