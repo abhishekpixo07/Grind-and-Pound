@@ -55,6 +55,10 @@ gem 'cloudinary'
 gem 'carrierwave'
 gem 'activeadmin_quill_editor'
 gem 'razorpay', '~> 3.2.1'
+gem 'httparty'
+gem 'prawn'
+gem 'prawn-table'
+
 
 
 
@@ -69,6 +73,14 @@ group :development, :test do
 end
 
 group :development do
+  gem 'ed25519', '~> 1.2'
+  gem 'bcrypt_pbkdf', '~> 1.0'
+
+  gem 'capistrano', require: false
+  gem 'capistrano-rails', require: false
+  gem 'capistrano-bundler', require: false
+  gem 'capistrano-rbenv', require: false
+  gem 'capistrano-passenger', require: false
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem "web-console"
 

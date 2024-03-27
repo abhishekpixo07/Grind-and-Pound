@@ -30,10 +30,6 @@ class Product < ApplicationRecord
   accepts_nested_attributes_for :product_properties, allow_destroy: true
 
   has_many :reviews
-  
-  def available_for_zip_code?(zip_code)
-    available_zip_codes.include?(zip_code)
-  end
 
   scope :filter_by_price_range, ->(min_price, max_price) do
     where(master_price: min_price..max_price)
@@ -46,6 +42,12 @@ class Product < ApplicationRecord
   scope :filter_by_net_wt_and_unit, ->(net_wt_unit) do
     net_wt, unit = net_wt_unit.match(/(\d+)([a-zA-Z]+)/).captures
     where(net_wt: net_wt, unit: unit)
+  end
+
+  validates :available_zip_codes, presence: true
+
+  def available_zip_codes=(value)
+    super(Array(value).reject(&:blank?))
   end
 
   def self.ransackable_associations(auth_object = nil)

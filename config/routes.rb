@@ -54,6 +54,8 @@ Rails.application.routes.draw do
           post 'index', to: 'products#index'
           post '/check_availability', to: 'products#check_availability'
           get 'check/stock/:id', to: 'products#check_stock',as: :check_stock
+          post :available_zip_codes
+          post :search
         end
       end
       resources :shipping_addresses
@@ -65,17 +67,26 @@ Rails.application.routes.draw do
           post 'index', to: 'reviews#index'
         end
       end
+      resources :invoices, only: [:show]
 
       resources :vouchers, only: [:index, :show]
-      resources :our_stories, only: [:index, :show]
+      resources :our_stories, only: [:index, :show] do
+        collection do
+          get 'about_us', to: 'our_stories#about_us',as: "/about/us"
+        end
+      end
+      resources :stores, only: [:index]
       resources :blogs, only: [:index, :show]
       resources :faqs, only: [:index]
-      
-      post '/refer_without_login', to: 'referrals#refer_without_login'
-      post '/refer_with_login', to: 'referrals#refer_with_login'
+      resources :privacy_policies, only: [:index]
+      resources :terms_of_sales, only: [:index]
+      resources :terms_of_uses, only: [:index]
+
+      post '/share_referral_code', to: 'referrals#share_referral_code'
+      post '/user_referral_code', to: 'referrals#user_referral_code'
 
       resources :coupons, only: [:index, :show] do
-        member do
+        collection do
           post 'apply'
           delete 'remove'
         end

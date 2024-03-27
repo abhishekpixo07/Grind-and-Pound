@@ -3,6 +3,8 @@ ActiveAdmin.register Faq do
 
   permit_params :question, :answer, :faq_category_id
 
+  filter :faq_category, as: :select, collection: -> { FaqCategory.pluck(:title, :id) }
+
   index do
     selectable_column
     id_column
@@ -14,14 +16,11 @@ ActiveAdmin.register Faq do
     actions
   end
 
-  filter :question
-  filter :answer
-
   form do |f|
     f.inputs 'FAQ Details' do
       f.input :faq_category
       f.input :question
-      f.input :answer, as: :text
+      f.input :answer, as: :quill_editor
     end
     f.actions
   end

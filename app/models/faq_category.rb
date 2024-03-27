@@ -1,5 +1,5 @@
 class FaqCategory < ApplicationRecord
-    has_many :faqs
+    has_many :faqs,dependent: :destroy
     validates :title, presence: true, uniqueness: true
 
     

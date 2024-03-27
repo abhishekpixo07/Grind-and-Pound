@@ -8,6 +8,7 @@ class Coupon < ApplicationRecord
   validates :user_limit, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
  
   # Associations
+  has_many :temp_user_coupons, dependent: :destroy
   has_many :user_coupons, dependent: :destroy
   has_many :users, through: :user_coupons
  
@@ -24,8 +25,9 @@ class Coupon < ApplicationRecord
   end
 
   def self.ransackable_associations(auth_object = nil)
-    ["user_coupons", "users"]
+    ["user_coupons", "users", "temp_user_coupons"]
   end
+  
   def self.ransackable_attributes(auth_object = nil)
     ["active", "applicability", "code", "created_at", "description", "discount_percentage", "expiry_date", "id", "max_discount_amount", "minimum_purchase_amount", "no_of_uses", "stackable", "title", "unique_per_user", "updated_at", "usage_restrictions", "user_limit"]
   end

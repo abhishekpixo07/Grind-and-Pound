@@ -1,18 +1,12 @@
-# app/serializers/order_serializer.rb
+
+
+
 class OrderSerializer < ActiveModel::Serializer
-  attributes :id, :sub_total, :discount_amount, :shipping_fee, :total_amount, :status, :payment_method, :notes, :created_at, :delivery_date, :updated_at, :order_items, :user
+  attributes :id, :sub_total, :discount_amount, :shipping_fee, :total_amount, :status, :payment_method, :notes, :created_at, :delivery_date, :updated_at, :order_items, :shipping_address
 
-  belongs_to :shipping_address
   has_one :payment
+  has_one :user
   has_many :order_items
-
-  def delivery_date
-    object.delivery_date.present? ? object.delivery_date : object.created_at + 2.days 
-  end
-
-  def user
-    object.user
-  end
 
   def order_items
     object.order_items.map do |order_item|
@@ -24,5 +18,20 @@ class OrderSerializer < ActiveModel::Serializer
         product: ProductSerializer.new(order_item.product),
       }
     end
+  end
+
+  def delivery_date
+    object.delivery_date.present? ? object.delivery_date : object.created_at + 2.days 
+  end
+
+  def shipping_address
+    {
+      address_line_1: object.address_line_1,
+      address_line_2: object.address_line_2,
+      city: object.city,
+      state: object.state,
+      postal_code: object.postal_code,
+      country: object.country
+    }
   end
 end

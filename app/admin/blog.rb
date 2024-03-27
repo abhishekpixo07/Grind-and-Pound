@@ -4,7 +4,10 @@ ActiveAdmin.register Blog do
   menu parent: 'Blog', label: 'Blogs', priority: 2
 
     permit_params :title, :description, :image, :blog_category_id
-  
+
+    filter :blog_category, as: :select, collection: -> { BlogCategory.pluck(:title, :id) }
+    filter :title    
+
     index do
       selectable_column
       id_column
@@ -20,7 +23,7 @@ ActiveAdmin.register Blog do
       f.inputs 'Voucher Details' do
         f.input :blog_category
         f.input :title
-        f.input :description, as: :text
+        f.input :description, as: :quill_editor
         f.input :image, as: :file
     end
       f.actions

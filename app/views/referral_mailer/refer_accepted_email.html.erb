@@ -1,0 +1,13 @@
+<!-- app/views/referral_mailer/refer_accepted_email.html.erb -->
+<!DOCTYPE html>
+<html>
+<head>
+  <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+</head>
+<body>
+  <h1>Welcome to our service!</h1>
+  <p>Hi <%= @referred_user.first_name %>,</p>
+  <p>You've been referred to our awesome service by <%= @referrer.title %> <%= @referrer.first_name %> <%= @referrer.last_name %>!</p>
+  <p>Feel free to explore and enjoy our offerings.</p>
+</body>
+</html>

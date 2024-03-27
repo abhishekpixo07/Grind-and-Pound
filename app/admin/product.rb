@@ -12,7 +12,6 @@ ActiveAdmin.register Product do
     filter :discontinue_on
     filter :master_price
     filter :subcategory
-    filter :attachment, as: :file
     
 
     index do
@@ -57,7 +56,7 @@ ActiveAdmin.register Product do
         f.input :master_price
         f.input :cost_price
         f.inputs 'Available Zip Codes' do
-          f.input :available_zip_codes, as: :string, input_html: { value: resource.available_zip_codes.join(', ') }
+          f.input :available_zip_codes, as: :string, input_html: { value: f.object.available_zip_codes.join(','), multiple: true }
         end     
         f.inputs 'Product Texture' do
           f.has_many :textures, heading: false, allow_destroy: true do |nested_f|

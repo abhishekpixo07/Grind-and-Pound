@@ -2,7 +2,8 @@
 
 ActiveAdmin.register OurStory do
     permit_params :title, :description, :image
-  
+    filter :title
+
     index do
       selectable_column
       id_column
@@ -16,7 +17,7 @@ ActiveAdmin.register OurStory do
     form do |f|
       f.inputs 'Voucher Details' do
         f.input :title
-        f.input :description, as: :text
+        f.input :description, as: :quill_editor
         f.input :image, as: :file
     end
       f.actions

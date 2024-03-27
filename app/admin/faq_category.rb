@@ -14,7 +14,11 @@ ActiveAdmin.register FaqCategory do
   
     form do |f|
       f.inputs 'FAQ category' do
-        f.input :title
+        if f.object.new_record?
+          f.input :title
+        else
+          f.input :title, input_html: { disabled: true } # Make title non-editable in edit form
+        end
       end
       f.actions
     end

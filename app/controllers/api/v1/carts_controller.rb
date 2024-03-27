@@ -10,24 +10,29 @@ module Api
       def index
         render json: @cart
       end
-
+      
       def create
         @cart = @current_user.cart || Cart.create(user: @current_user)
         if @cart.persisted?
-          product = Product.find(params[:product_id])
-          quantity = params[:quantity].to_i
-      
-          # Check if the cart already has the product, update quantity if so
-          cart_item = @cart.cart_items.find_or_initialize_by(product: product)
-          cart_item.update(quantity: quantity)
-      
-          render json: {
-            cart: ActiveModelSerializers::SerializableResource.new(@cart, serializer: CartSerializer)
-          }, status: :created
+          product = Product.find_by(id: params[:product_id]) # Use find_by to return nil if not found
+          if product.present?
+            quantity = params[:quantity].to_i
+        
+            # Check if the cart already has the product, update quantity if so
+            cart_item = @cart.cart_items.find_or_initialize_by(product: product)
+            cart_item.update(quantity: quantity)
+        
+            render json: {
+              cart: ActiveModelSerializers::SerializableResource.new(@cart, serializer: CartSerializer)
+            }, status: :created
+          else
+            render json: { error: 'Product not found.' }, status: :unprocessable_entity
+          end
         else
           render json: @cart.errors, status: :unprocessable_entity
         end
       end
+      
       
       def update
         product = Product.find(params[:id])

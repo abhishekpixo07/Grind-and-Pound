@@ -13,6 +13,17 @@ module Api
                 @categories = Category.all
                 render json: { data: 'products list.', products: ActiveModelSerializers::SerializableResource.new(@products, each_serializer: ProductSerializer), subcategories: @subcategories.as_json(only: [:id, :name]), categories: @categories.as_json(only: [:id, :name]) }, status: :ok
             end  
+
+            def search
+              @products = []
+              if params[:name].present?
+                @products = Product.where("name ILIKE ?", "%#{params[:name]}%").order(created_at: :desc)
+              end
+              render json: {
+                  data: 'products list.',
+                  product: ActiveModelSerializers::SerializableResource.new(@products, each_serializer: ProductSerializer),
+                }, status: :ok
+            end
         
             def show
                 products_in_same_subcategory = Product.where(subcategory_id: @product.subcategory_id).where.not(id: @product.id)
@@ -28,7 +39,7 @@ module Api
             def check_availability
                 zip_code = params[:zip_code].to_s            
                 if @product && @product.available_for_zip_code?(zip_code)
-                  render json: { available: true, product: @product }, status: :ok
+                  render json: { available: true, message: "Delivery Available", product: @product}, status: :ok
                 else
                   render json: { available: false }, status: :not_found
                 end
@@ -41,6 +52,29 @@ module Api
                 render json: { in_stock: false }
               end
             end
+
+            def available_zip_codes
+              zip_codes = Product.pluck(:available_zip_codes).flatten.uniq
+              formatted_zip_codes = zip_codes.flat_map { |codes| codes.split(",") }.uniq
+              
+              pin_code = params[:pin_code]
+              available_products = Product.where(":pin_code = ANY (available_zip_codes)", pin_code: pin_code)
+              
+              if available_products.any?
+                render json: {
+                  zip_codes: formatted_zip_codes,
+                  message: 'Delivery available!',
+                  status: true
+                }, status: :ok
+              else
+                render json: {
+                  zip_codes: formatted_zip_codes,
+                  message: 'We apologize, but we do not offer service in your area!',
+                  status: false
+                }, status: :ok
+              end
+            end            
+             
 
             private
         
