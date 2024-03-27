@@ -1,6 +1,7 @@
 # app/mailers/referral_mailer.rb
 class ReferralMailer < ApplicationMailer
-    def refer_email(email)
+    def refer_email(email,referral_code)
+      @referral_code = referral_code
       mail(to: email, subject: 'You have been referred!')
     end
   

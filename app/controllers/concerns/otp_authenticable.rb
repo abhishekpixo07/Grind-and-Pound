@@ -28,15 +28,40 @@ module OtpAuthenticable
     end
   end
     
+  # def create_and_send_otp
+  #   @user = build_user(user_params)
+  #   @user.otp = generate_random_otp
+  #   @user.save!
+  #   @user_token = create_session(@user)
+  #   render_response
+  #   # send_otp_via_twilio(user) if @user.phone_number.present?
+  #   @user
+  # end
+
   def create_and_send_otp
+    referral_code = params[:user][:referral_code]
     @user = build_user(user_params)
     @user.otp = generate_random_otp
     @user.save!
     @user_token = create_session(@user)
+    
+    # Check if a referral code was provided
+    if referral_code.present?
+      referrer = User.find_by(referral_key: referral_code)
+      if referrer.present?
+        # Associate the referrer with the referred user
+        Referral.create!(referrer_id: @user.id ,referred_user_id: referrer.id)
+      else
+        # Handle invalid referral code
+        render json: { error: 'Invalid referral code' }, status: :unprocessable_entity
+        return
+      end
+    end
     render_response
     # send_otp_via_twilio(user) if @user.phone_number.present?
     @user
   end
+  
   
   def render_response
     render json: { message: 'OTP sent successfully.' }, status: :ok

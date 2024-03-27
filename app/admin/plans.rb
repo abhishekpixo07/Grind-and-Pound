@@ -1,6 +1,6 @@
 # app/admin/plans.rb
 ActiveAdmin.register Plan do
-  permit_params :name, :price, :interval, :features
+  permit_params :name, :price, :billing_interval, :features
 
   filter :name
   filter :price
@@ -13,7 +13,7 @@ ActiveAdmin.register Plan do
     id_column
     column :name
     column :price
-    column :interval
+    column :billing_interval
     column :features
     actions
   end
@@ -22,7 +22,7 @@ ActiveAdmin.register Plan do
     f.inputs 'Plan Details' do
       f.input :name
       f.input :price
-      f.input :interval, as: :select, collection: Plan.intervals.keys
+      f.input :billing_interval, as: :select, collection: Plan.billing_intervals.keys
       f.input :features, as: :quill_editor
     end
     f.actions
@@ -32,7 +32,7 @@ ActiveAdmin.register Plan do
     attributes_table do
       row :name
       row :price
-      row :interval
+      row :billing_interval
       row :features
       row "Subscribed Users" do |plan|
         plan.subscriptions.map { |subscription| link_to(subscription.user.first_name, admin_user_path(subscription.user)) }.join(", ").html_safe

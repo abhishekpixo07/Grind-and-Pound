@@ -1,6 +1,5 @@
 # config valid for current version and patch releases of Capistrano
 lock "~> 3.18.1"
-
 set :application, "grind_and_pound"
 set :repo_url, "git@github.com:abhishekpixo07/Grind-and-Pound.git"
 

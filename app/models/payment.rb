@@ -1,6 +1,7 @@
 class Payment < ApplicationRecord
   belongs_to :user
-  belongs_to :order
+  belongs_to :subscription, optional: true
+  belongs_to :order, optional: true
 
   validates :payment_status, inclusion: { in: %w(pending success failed) }
   validates :payment_amount, numericality: { greater_than_or_equal_to: 0 }

@@ -46,7 +46,7 @@ module Api
                             Date.tomorrow
                           end
           order.update(delivery_date: delivery_date)
-          
+          provide_coupon_to_referrer(order)
           # Create UserCoupon after successful payment capture
           TempUserCoupon.where(user_id: @current_user.id).each do |temp_coupon|
             UserCoupon.create!(user_id: temp_coupon.user_id, coupon_id: temp_coupon.coupon_id)
@@ -87,6 +87,15 @@ module Api
           )
         end
       end
+
+      def provide_coupon_to_referrer (order)
+          # referrer = order.user.referrals.first&.referrer
+          # if referrer.present? && referrer.coupon.blank? && user.orders.count > 0
+          #     # Provide coupon to the referrer
+          #   referrer.create_coupon(code: 'REFERRAL10', discount: 10)
+          # end
+      end
+
     end
   end
 end
