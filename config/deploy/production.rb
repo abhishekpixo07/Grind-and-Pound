@@ -1,7 +1,7 @@
 # config/deploy/production.rb
 
 server '77.37.47.65', user: 'root', roles: %w{app db web}
-set :ssh_options, keys: %w(~/.ssh/id_rsa), forward_agent: true
+set :ssh_options, keys: %w(~/.ssh/id_rsa), forward_agent: false
 
 set :application, "grind_and_pound"
 set :repo_url, "git@github.com:ashishpixo/grind_pound_backend.git"
@@ -10,10 +10,6 @@ set :repo_url, "git@github.com:ashishpixo/grind_pound_backend.git"
 set :branch, 'master'
 set :stage, :production
 set :rails_env, :production
-
-set :ssh_options, {
-keys: %w(~/.ssh/id_rsa),
-forward_agent: false, }
 
 # Default deploy_to directory is /var/www/my_app_name
 
