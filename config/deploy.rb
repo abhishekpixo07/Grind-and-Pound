@@ -5,7 +5,7 @@ set :repo_url, "git@github.com:ashishpixo/grind_pound_backend.git"
 
 # Default branch is :master
 # ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
-set :rbenv_ruby, '3.0.0'
+set :rbenv_ruby, '3.2.1'
 
 # Default deploy_to directory is /var/www/my_app_name
 # set :deploy_to, "/var/www/my_app_name"
