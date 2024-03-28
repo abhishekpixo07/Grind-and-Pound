@@ -1,10 +1,11 @@
 # config valid for current version and patch releases of Capistrano
 lock "~> 3.18.1"
 set :application, "grind_and_pound"
-set :repo_url, "git@github.com:abhishekpixo07/Grind-and-Pound.git"
+set :repo_url, "git@github.com:ashishpixo/grind_pound_backend.git"
 
 # Default branch is :master
 # ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
+set :rbenv_ruby, '3.0.0'
 
 # Default deploy_to directory is /var/www/my_app_name
 # set :deploy_to, "/var/www/my_app_name"
