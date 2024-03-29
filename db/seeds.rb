@@ -45,3 +45,14 @@ banners.each do |banner_params|
     banner.update(banner_params)
   end
 end
+
+# Seed data for blogs
+Blog.find_or_create_by(
+  title: "The Art of Baking with Wheat Flour: From Classics to Creative Delights",
+  description: "Dive into the heart of the kitchen and embrace the age-old tradition of baking with the golden essence of wheat flour. Uncover the wholesome magic behind crafting rustic loaves of artisanal bread, embark on a quest to master the delicate dance of pie crusts, and infuse your mornings with the aroma of freshly flipped pancakes. Our journey goes beyond the basics, exploring the science and artistry that transforms humble wheat flour into culinary masterpieces.\r\n\r\nWhether you're a seasoned baker or a kitchen adventurer, our blog is a treasure trove of inspiration. From soft and chewy cookies to decadent cakes adorned with silky frosting, we're here to guide you through the sweet symphony of flavors that only wheat flour can offer. Discover the tales of time-tested recipes, learn the tricks of the trade, and unlock the secrets to achieving that perfect rise in your dough.\r\n\r\nJoin us on a flour-dusted exploration where tradition meets innovation, and where every knead, roll, and bake brings a sense of satisfaction and joy. Elevate your baking repertoire, share in the joy of creating, and savor the delicious results that only the art of baking with wheat flour can deliver. Let's turn your kitchen into a haven of creativity and deliciousness!",
+)
+
+Blog.find_or_create_by(
+  title: "Wheat Flour Wonders: Baking Bliss Unleashed",
+  description: "Embark on a culinary adventure with our blog, where wheat flour takes center stage in the enchanting world of baking. From the comforting embrace of warm, homemade bread to the delicate artistry of pastry creation, we invite you to explore the vast possibilities that wheat flour brings to your kitchen.\r\n\r\nUnleash your inner baker as we share not just recipes, but stories woven into the fabric of each floury creation. Whether you're a novice seeking the perfect cookie recipe or an experienced artisan aiming to elevate your skills, our blog is a haven of inspiration. Dive into the alchemy of baking science, uncover the nuances of various wheat flour varieties, and witness the transformative power that turns simple ingredients into extraordinary delights.\r\n\r\nIndulge in the joy of kneading soft, supple doughs, witness the rise of decadent cakes, and savor the aroma of freshly baked wonders. Join us as we celebrate the humble wheat grain, unravel its secrets, and embrace the delicious symphony it orchestrates in our kitchens. Let's journey together into a realm where every sift, fold, and bake brings us closer to the sheer bliss of wheat flour creations. Get ready to awaken your senses and infuse your home with the aroma of pure baking delight!",
+)
