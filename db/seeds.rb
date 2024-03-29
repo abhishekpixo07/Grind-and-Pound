@@ -25,3 +25,23 @@ end
 Category.find_each do |category|
     FaqCategory.find_or_create_by(title: category.name)
 end
+
+#for create banner data
+
+banners = [
+  { title: "Harvested with Care, Ground with Passion", text_color: "#d34a4a", banner_type: "banner" },
+  { title: "Harvested Ground Passion", text_color: "#24d662", banner_type: "banner" },
+  { title: "Elevate Morning With 100%, Unpolished Daliya", text_color: "#000000", banner_type: "banner" },
+  { title: "Create your own Coffee Club subscription and curate your plan", text_color: "#000000", banner_type: "advertise" },
+  { title: "Create your own Coffee Club subscription and curate your plan", text_color: "#000000", banner_type: "advertise" },
+  { title: "Create your own Coffee Club subscription and curate your plan", text_color: "#000000", banner_type: "advertise" },
+  { title: "Create your own Coffee Club subscription and curate your plan", text_color: "#000000", banner_type: "advertise" },
+  { title: "Create your own Coffee Club subscription and curate your plan, picking exactly what you want and when to receive it. No stress, just great coffee.", text_color: "#000000", banner_type: "promotion" },
+  { title: "Elevate Morning With 100%, Unpolished Daliya", text_color: "#faf5f5", banner_type: "banner" }
+]
+
+banners.each do |banner_params|
+  Banner.find_or_create_by(title: banner_params[:title]) do |banner|
+    banner.update(banner_params)
+  end
+end
