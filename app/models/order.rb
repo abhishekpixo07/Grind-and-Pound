@@ -29,6 +29,10 @@ class Order < ApplicationRecord
     private
   
     def order_status_changed
-      OrderMailer.order_status(self.user, self).deliver_now
+        if status == 'placed'
+            # Skip sending the email for orders with status 'placed'
+            return
+        end
+        OrderMailer.order_status(self.user, self).deliver_now
     end
 end
