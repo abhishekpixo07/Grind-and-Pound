@@ -29,7 +29,7 @@ class Order < ApplicationRecord
     private
   
     def order_status_changed
-        if status == 'placed'
+        if self.status == 'Placed'
             # Skip sending the email for orders with status 'placed'
             return
         end
